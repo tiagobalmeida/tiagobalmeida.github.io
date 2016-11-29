@@ -1,6 +1,6 @@
 # Build it! - A pure css circular progress bar
 
-
+ 
 This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and to render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?
 
 ![sample](posts/images/cssprogbar-sample.png)
