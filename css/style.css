@@ -1,0 +1,7 @@
+.codehilite pre {
+  overflow-x: auto;
+  /* Create horizontal scrollbars for long code */
+  background-color: #efefef;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}

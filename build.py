@@ -21,7 +21,9 @@ class JinjaGenerator():
 
 def _render_post(md_path):
 	post_html = ''
-	md = markdown.Markdown()
+	md = markdown.Markdown(
+		extensions=['markdown.extensions.fenced_code', 
+					'markdown.extensions.codehilite'])
 	with open(md_path, 'r') as f:
 		post_html = md.convert(f.read())
 	context = {
