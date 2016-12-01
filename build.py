@@ -38,7 +38,9 @@ def _title(md_path):
 	Given the path to a markdown file, returns the title for the 
 	post. This is built by the sluggified file name
 	"""
-	return "test.html"
+	from slugify import slugify
+	file_name = os.path.splitext(os.path.basename(md_path))[0]
+	return os.path.join('posts', slugify(file_name) + '.html')
 
 
 def write_post(name, content):

@@ -1,9 +1,11 @@
-# Build it! - A pure css circular progress bar
+# Build it! - A pure css circular progress bar (draft)
 
  
-This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and to render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?
+This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?
 
-![sample](posts/images/cssprogbar-sample.png)
+![sample](images/cssprogbar-sample.png)
+
+[Live demo](code/pure_css_circular_progress.html)
 
 # Let's start with a square
 A square is just a "block" with both dimensions with the same length. Let's use a div for this.
@@ -19,12 +21,12 @@ A square is just a "block" with both dimensions with the same length. Let's use 
    height: 5em;
 }
 ```
-Here we use em as units as this will allow the control to scale everything based on font-size. 
+Here we use em as units as this will allow the control to scale everything based on font-size. 
 
 # Making it round
 To make it round, we use an old css trick: If you pick a square and give it a 50% border radius, it becomes a circle.
 
-![A circle from a square](posts/images/cssprogbar1.png)
+![A circle from a square](images/cssprogbar1.png)
 
 ```css
 .progress-circle {
@@ -63,7 +65,7 @@ Instead of inserting a new dom element, we'll use an :after pseudo element.
 # Cliping it!
 To make the progress bar we will take a circle with the same diameter as the whole control and hide its right half using the clip() css operator. 
 
-![Half cirle](posts/images/cssprogbar2.png)
+![Half cirle](images/cssprogbar2.png)
 
 
 ```css
@@ -94,10 +96,11 @@ The .left-half-clipper contains the value-bar making sure only it's right half i
 
 
 Rotating this half circle by an amount X while hiding what's on the left half, we get the desired progress bar effect. By varying the X from 0 to 180deg, we go from 0 to 50%.
-![A circle from a square](posts/images/cssprogbar3.png)
+
+![A circle from a square](images/cssprogbar3.png)
 
 
-## Rotation values
+# Rotation values
 The rotation values are very simple to compute as the rotation is a linear function of the percentage. I used a spreadsheet to get all values between 0 and 50 (%) and the corresponding rounded rotations. I then created a few css rules hardcoding these values. Here the classes pX are used for the percentage with value X:
 
 ```css
@@ -138,3 +141,9 @@ To represent percentages above 50 we can still keep rotating the bar but we need
    </div>
 </div>
 ```
+
+# Cleaning it up
+The final version should have vendor prefixes in the css.
+
+The clip css operator is [marked as deprecated](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) and being replaced by clip-path which in turn is not supported by IE.
+
