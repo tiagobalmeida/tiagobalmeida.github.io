@@ -6,8 +6,8 @@
     <meta name="author" content="Tiago Almeida">
     <meta name="description" content="A blog on Software engineering and computer programming">
     <title>Tiago Almeida on Software</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/codehilite.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/codehilite.css">
   </head>
   <body>
     <style type="text/css">
@@ -39,7 +39,7 @@
         }
       }
     </style>
-    <nav class="container">
+    <div class="container">
       <div class="twelve columns">
       <h1>Build it! - A pure css circular progress bar (draft)</h1>
 <p>This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?</p>
@@ -165,5 +165,9 @@ Instead of inserting a new dom element, we'll use an :after pseudo element.</p>
 <p>The final version should have vendor prefixes in the css.</p>
 <p>The clip css operator is <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clip">marked as deprecated</a> and being replaced by clip-path which in turn is not supported by IE.</p>
       </div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
   </body>
 </html>
