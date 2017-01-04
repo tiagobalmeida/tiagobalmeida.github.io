@@ -1,5 +1,5 @@
 # Welcome to my blog
-This blog is written in markdown and built with a custom Python based program. Below you can find instructions on how to use it for your own blog.
+This blog is written in markdown and built with a custom Python based program. Below you can find instructions on how to use it for your own.
 
 
 # Preparing the build
@@ -34,8 +34,9 @@ This will generate an html version with a sluggified name in folder posts.
 
 The index.html is not at the moment automatically updated.
 
-# Publishing your post
-If your blog is hosted on github in a repo called your_username.github.io you just need to git commit and git push.
+# Publishing
+If your blog is hosted on github in a repo called your_username.github.io you just need to git commit and git push. Use the git commit/push to control what gets published.
+
 
 
 Tiago Almeida 2016
