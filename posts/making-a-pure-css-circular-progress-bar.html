@@ -41,10 +41,10 @@
     </style>
     <div class="container">
       <div class="twelve columns">
-      <h1>Build it! - A pure css circular progress bar (draft)</h1>
+      <h1>Build it! - A pure css circular progress bar</h1>
 <p>This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?</p>
 <p><img alt="sample" src="images/cssprogbar-sample.png" /></p>
-<p><a href="code/pure_css_circular_progress.html">Live demo</a></p>
+<p><a href="/demo/circ-prog-bar/index.html">Live demo</a></p>
 <h1>Let's start with a square</h1>
 <p>A square is just a "block" with both dimensions with the same length. Let's use a div for this.</p>
 <div class="codehilite"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;progress-circle&quot;</span><span class="p">&gt;</span>
@@ -161,9 +161,14 @@ Instead of inserting a new dom element, we'll use an :after pseudo element.</p>
 </pre></div>
 
 
-<h1>Cleaning it up</h1>
+<h1>Final remarks</h1>
 <p>The final version should have vendor prefixes in the css.</p>
-<p>The clip css operator is <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clip">marked as deprecated</a> and being replaced by clip-path which in turn is not supported by IE.</p>
+<p>The clip css operator is <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clip">marked as deprecated</a> and being replaced by clip-path which in turn is not fully supported by IE.</p>
+<p>You can find the css/html code on <a href="https://github.com/jumpifzero/purecss-circular-progress-bar">its own repo</a></p>
+<h1>References</h1>
+<p>I took this technique largely from ideas on <a href="http://firchow.net/">André Firchow's blog</a> but hope to have done a more indepth explanation.</p>
+<h1>Admin</h1>
+<p>Last updated at 11 January 2017.</p>
       </div>
       <footer class="twelve columns">
         <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
