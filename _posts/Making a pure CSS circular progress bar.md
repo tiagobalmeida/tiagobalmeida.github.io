@@ -1,11 +1,11 @@
-# Build it! - A pure css circular progress bar (draft)
+# Build it! - A pure css circular progress bar
 
  
 This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?
 
 ![sample](images/cssprogbar-sample.png)
 
-[Live demo](code/pure_css_circular_progress.html)
+[Live demo](/demo/circ-prog-bar/index.html)
 
 # Let's start with a square
 A square is just a "block" with both dimensions with the same length. Let's use a div for this.
@@ -142,8 +142,15 @@ To represent percentages above 50 we can still keep rotating the bar but we need
 </div>
 ```
 
-# Cleaning it up
+# Final remarks
 The final version should have vendor prefixes in the css.
 
-The clip css operator is [marked as deprecated](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) and being replaced by clip-path which in turn is not supported by IE.
+The clip css operator is [marked as deprecated](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) and being replaced by clip-path which in turn is not fully supported by IE.
 
+You can find the css/html code on [its own repo](https://github.com/jumpifzero/purecss-circular-progress-bar)
+
+# References
+I took this technique largely from ideas on [André Firchow's blog](http://firchow.net/) but hope to have done a more indepth explanation.
+
+# Admin
+Last updated at 11 January 2017.

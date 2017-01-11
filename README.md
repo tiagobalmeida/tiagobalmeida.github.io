@@ -34,6 +34,14 @@ This will generate an html version with a sluggified name in folder posts.
 
 The index.html is not at the moment automatically updated.
 
+# Preview a post
+After build, use the following to preview.
+```
+python3 -m http.server
+```
+
+Open a browser on localhost/posts
+
 # Publishing
 If your blog is hosted on github in a repo called your_username.github.io you just need to git commit and git push. Use the git commit/push to control what gets published.
 
