@@ -8,6 +8,7 @@
     <title>Tiago Almeida on Software</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/codehilite.css">
+    <link rel="canonical" href="https://jumpifzero.github.io/posts/making-a-pure-css-circular-progress-bar.html" />
   </head>
   <body class="post">
     <style type="text/css">
@@ -167,6 +168,8 @@ Instead of inserting a new dom element, we'll use an :after pseudo element.</p>
 <p>You can find the css/html code on <a href="https://github.com/jumpifzero/purecss-circular-progress-bar">its own repo</a></p>
 <h1>References</h1>
 <p>I took this technique largely from ideas on <a href="http://firchow.net/">André Firchow's blog</a> but hope to have done a more indepth explanation.</p>
+<h1>Comments</h1>
+<div id="disqus_thread"></div>
 <h1>Admin</h1>
 <p>Last updated at 11 January 2017.</p>
       </div>
@@ -174,5 +177,21 @@ Instead of inserting a new dom element, we'll use an :after pseudo element.</p>
         <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
       </footer>
     </div>
+    <!-- Disqus -->
+    <script>
+    var disqus_config = function () {
+    this.page.url = 'https://jumpifzero.github.io/posts/making-a-pure-css-circular-progress-bar.html';
+    this.page.identifier = 'making-a-pure-css-circular-progress-bar';
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
   </body>
 </html>
