@@ -19,7 +19,7 @@ class JinjaGenerator():
 							.get_template(template_filename)
 							.render(context))
 
-def _render_post(md_path):
+def _render_post(md_path, html_name):
 	post_html = ''
 	md = markdown.Markdown(
 		extensions=['markdown.extensions.fenced_code', 
@@ -27,16 +27,17 @@ def _render_post(md_path):
 	with open(md_path, 'r') as f:
 		post_html = md.convert(f.read())
 	context = {
-		'content': post_html
+		'content': 			post_html,
+		'target_html_name': html_name
 	}
 	generator = JinjaGenerator()
 	return generator.render('post_template.html', context)
 
 
-def _title(md_path):
+def _target_file_name(md_path):
 	"""
-	Given the path to a markdown file, returns the title for the 
-	post. This is built by the sluggified file name
+	Given the path to a markdown file, returns the html name for the 
+	post. This is built by the sluggified file name ending with .html
 	"""
 	from slugify import slugify
 	file_name = os.path.splitext(os.path.basename(md_path))[0]
@@ -52,6 +53,7 @@ def write_post(name, content):
 if __name__ == "__main__":
 	from sys import argv
 	if len(argv) == 2:
-		write_post(_title(argv[1]), _render_post(argv[1]))
+		write_post(	_target_file_name(argv[1]), 
+					_render_post(argv[1], _target_file_name(argv[1]) ) )
 	else:
 		pass #todo

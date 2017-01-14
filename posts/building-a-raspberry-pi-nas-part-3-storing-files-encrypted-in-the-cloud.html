@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Tiago Almeida">
+    <meta name="description" content="A blog on Software engineering and computer programming">
+    <title>Tiago Almeida on Software</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/codehilite.css">
+    <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/building-a-raspberry-pi-nas-part-3-storing-files-encrypted-in-the-cloud.html" />
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+
+      @media (max-width: 550px) {
+        body {
+          text-align: justify;
+        }
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="twelve columns">
+      <h1>Building a Raspberry Pi NAS - Part 3: Storing files encrypted in the cloud</h1>
+<p>This post is part of a series on building the ultimate NAS system with a raspberry pi, creating your own "cloud".</p>
+<p>In this post I'll present a way to make sure you do not lose your important files.</p>
+<p>For this, we'll setup a personal account on a cloud service provider and then mount the space they give us on the raspberry pi's file system. The files will be replicated remotely to this service to prevent data loss if local file systems fail.</p>
+<p>This storage space will also be used for very important and sensitive data. For this reason, it will be fully encrypted so that not even the cloud sys admins could read it.</p>
+<h2>Part 1: Getting a reliable remote storage space</h2>
+<p>First get an account on box.com (this is a cloud storage provider). Personal accounts are free and give you 10GB.  I chose them because they support the webdav protocol, unlike google drive which would be my first option. Other possible provider could be HiDrive
+. In theory you could use any remote storage space provider that supports some protocol that you can use for mounting. </p>
+<p>Now let's create a mount point. In this series I am mounting the different filesystems on ~/mnt. For this create a ~/mnt/box1 folder.</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~/mnt
+mkdir box1
+</pre></div>
+
+
+<p>Now install the necessary packages to mount a webdav fs.</p>
+<div class="codehilite"><pre><span></span>sudo apt-get install davfs2
+</pre></div>
+
+
+<p>We want this to be fully automated and automounted on reboot. For this, we need to store the user and password you used for the box.com account in a file.</p>
+<p>Create folder ~/.davfs2</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~
+mkdir .davfs2
+</pre></div>
+
+
+<p>Inside this folder, edit file called secrets </p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> .davfs2
+nano secrets
+</pre></div>
+
+
+<p>and insert a single line like this:
+https://dav.box.com/dav username password</p>
+<p>Where username / password are replaced by your own.</p>
+<p>Now we need to add the pi user to the davfs2 group so that he can mount these guys.</p>
+<div class="codehilite"><pre><span></span>sudo usermod -aG davfs2 pi
+</pre></div>
+
+
+<p>Also do the reconfig:</p>
+<div class="codehilite"><pre><span></span>sudo dpkg-reconfigure davfs2
+</pre></div>
+
+
+<p>Select yes on the screen that appears. </p>
+<p>Edit /etc/fstab as root and insert the following line:</p>
+<div class="codehilite"><pre><span></span>https://dav.box.com/dav /home/pi/mnt/box1  davfs  rw,noexec,noauto,user,async,_netdev,uid=pi,gid=pi  0  0
+</pre></div>
+
+
+<p>The _netdev specifies that this fs is only mounted if there is a network connection. You should test this. </p>
+<p>Logout and login again (so that your user gets the new group), and try to mount the file system with the following command: </p>
+<div class="codehilite"><pre><span></span>mount /home/pi/mnt/box1
+</pre></div>
+
+
+<p>You will most likely get an error: /sbin/mount.davfs: file /home/pi/.davfs2/secrets has wrong permissions.</p>
+<p>This is because the user pi is still not in the group above. Reboot the pi:</p>
+<div class="codehilite"><pre><span></span>sudo shutdown -r now
+</pre></div>
+
+
+<p>Now that the pi is rebooted, go to the .davfs2 folder and change permissions of the secrets file. If you do not do it, you'll get the following error: "/sbin/mount.davfs: file /home/pi/.davfs2/secrets has wrong permissions"</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~/.davfs2
+chmod <span class="m">600</span> secrets
+</pre></div>
+
+
+<p>Now, try to mount the file system:</p>
+<div class="codehilite"><pre><span></span>mount /home/pi/mnt/box1
+</pre></div>
+
+
+<p>if everything ok you can now copy files from/to /home/pi/mnt/box1 and they are being stored remotely. </p>
+<p>Note: I have found that automounting this with the auto option in etc/fstab is not very reliable. For this reason, we'll use an init script below to deal with the auto mounting on boot. </p>
+<h2>Part 2: Encrypting the files</h2>
+<p>To encrypt the files we'll use EncFS. This is a filesystem that allows you to mount another existing mount point. </p>
+<p>When you create files on the EncFs file system, they are transparently encrypted with a password you have chosen and stored (encrypted) in the underlying file system. We'll use the file system created previously as the underlying storage. </p>
+<p>Create a new mount point for the encrypted. I'll call it encbox1 </p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~/mnt
+mkdir encbox1
+</pre></div>
+
+
+<p>Install encfs </p>
+<div class="codehilite"><pre><span></span>sudo apt-get install encfs
+</pre></div>
+
+
+<p>To be able to mount fuse based file systems (like encfs) you need to be on the fuse group. </p>
+<div class="codehilite"><pre><span></span>sudo gpasswd -a pi fuse
+</pre></div>
+
+
+<p>Now it is easy to create the encrypted virtual file system. Use the following command: </p>
+<div class="codehilite"><pre><span></span>encfs ~/mnt/box1 ~/mnt/encbox1
+</pre></div>
+
+
+<p>This will use ~/mnt/box1 as an encrypted storage for whatever you create on encbox1. </p>
+<p>Let's test by creating a file on encbox1 and then listing content of encbox1 and box1: </p>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;test&quot;</span> &gt; ~/mnt/encbox1/teste.txt
+ls -lah ~/mnt/encbox1/
+total 1,0K
+drwxr-xr-x <span class="m">3</span> pi pi <span class="m">160</span> Abr <span class="m">26</span> 20:20 .
+-rw-r--r-- <span class="m">1</span> pi pi   <span class="m">5</span> Abr <span class="m">26</span> 20:11 teste.txt
+ls -lah ~/mnt/box1/
+total 2,5K
+drwxr-xr-x <span class="m">3</span> pi pi  <span class="m">160</span> Abr <span class="m">26</span> 20:20 .
+-rw-r--r-- <span class="m">1</span> pi pi 1,1K Abr <span class="m">26</span> 20:09 .encfs6.xml
+drwx------ <span class="m">2</span> pi pi    <span class="m">0</span> Abr <span class="m">26</span> 00:22 lost+found
+-rw-r--r-- <span class="m">1</span> pi pi   <span class="m">13</span> Abr <span class="m">26</span> 20:11 xbeDOz08kT4LmeJpXZmNAnky
+</pre></div>
+
+
+<p>Notice that the file is slightly larger after encryption (13Bytes) while the plain one is 5. This is because there is a overhead of +8Bytes when per file Initialization vectors are used. More with man encfs. </p>
+<h2>Part 3: Automounting encfs</h2>
+<p>As it turns out, automounting an encfs is not as simple as putting a line on /etc/fstab. We will create an init script for this and then set it to run automatically on boot. Create your script on /etc/init.d/boxencfs 
+Also, you need to put encfs password on a file only you can read.</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~
+mkdir .encfs
+<span class="nb">cd</span> .encfs
+nano box1
+</pre></div>
+
+
+<p>(now insert your password and ctrl+o, ctrl+x)</p>
+<div class="codehilite"><pre><span></span>chmod <span class="m">700</span> box1
+sudo nano /etc/init.d/boxencfs
+</pre></div>
+
+
+<p>And insert the following code: </p>
+<div class="codehilite"><pre><span></span><span class="ch">#! /bin/bash</span>
+<span class="c1"># /etc/init.d/boxencfs</span>
+
+<span class="c1">### BEGIN INIT INFO</span>
+<span class="c1"># Provides:          boxencfs</span>
+<span class="c1"># Required-Start:    $remote_fs $syslog</span>
+<span class="c1"># Required-Stop:     $remote_fs $syslog</span>
+<span class="c1"># Default-Start:     2 3 4 5</span>
+<span class="c1"># Default-Stop:      0 1 6</span>
+<span class="c1"># Short-Description: Simple script to mount box.com via webdav and an encfs on top of it</span>
+<span class="c1"># Description:       Mount box.com via webdav and encfs on top of it.</span>
+<span class="c1">### END INIT INFO</span>
+
+<span class="c1"># If you want a command to always run, put it here</span>
+
+<span class="c1"># Carry out specific functions when asked to by the system</span>
+<span class="k">case</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> in
+  start<span class="o">)</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Mounting box.com&quot;</span>
+    su pi -c <span class="s2">&quot;mount /home/pi/mnt/box1&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Mounting encfs&quot;</span>
+    su pi -c <span class="s2">&quot;cat /home/pi/.encfs/box1 | encfs -S /home/pi/mnt/box1 /home/pi/mnt/encbox1&quot;</span>
+    <span class="p">;;</span>
+  stop<span class="o">)</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Unmounting encfs&quot;</span>
+    su pi -c <span class="s2">&quot;fusermount -u /home/pi/mnt/encbox1&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Unmounting box.com&quot;</span>
+    umount /home/pi/mnt/box1
+    <span class="p">;;</span>
+  *<span class="o">)</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Usage: /etc/init.d/boxencfs {start|stop}&quot;</span>
+    <span class="nb">exit</span> 1
+    <span class="p">;;</span>
+<span class="k">esac</span>
+
+<span class="nb">exit</span> 0
+</pre></div>
+
+
+<p>This script, when passed the start argument, first mounts the box1 system on /home/pi/mnt/box1 and then mounts the encfs. The password for the encfs is stored on /home/pi/.encfs/box1 ( a file created previously ) and then piped to the encfs. </p>
+<p>-S argument to encfs makes it read the password from stdin. With the stop argument it does the opposite in opposite order. </p>
+<p>After saving this file, make it executable: </p>
+<div class="codehilite"><pre><span></span>sudo chmod +x /etc/init.d/boxencfs
+</pre></div>
+
+
+<p>Test this file very well by starting it and stopping it. A problem here may impact your reboot process. Test that it stops </p>
+<div class="codehilite"><pre><span></span>sudo /etc/init.d/boxencfs stop
+</pre></div>
+
+
+<p>Now test that it starts. After this, check your encbox1 and box1 folders to see if they have the files expected. </p>
+<div class="codehilite"><pre><span></span>sudo /etc/init.d/boxencfs start
+</pre></div>
+
+
+<p>When you feel this is fine, set it to run on boot/shutdown </p>
+<div class="codehilite"><pre><span></span>sudo update-rc.d boxencfs defaults
+</pre></div>
+
+
+<p>And now reboot your pi and pray that it doesn't hang on reboot :) </p>
+<div class="codehilite"><pre><span></span>sudo shutdown -r now
+</pre></div>
+
+
+<h2>Part 4: schedule an rsync to copy files to box1</h2>
+<p>At this moment we have a folder with 10GB capacity and anything we put there is encrypted on the fly and sent to box.com servers. </p>
+<p>This folder will be where we will store a copy of our important files. To see this you can run df -h:</p>
+<div class="codehilite"><pre><span></span>Filesystem               Size  Used Avail Use% Mounted on
+rootfs                   7,1G  2,3G  4,5G  34% /
+/dev/root                7,1G  2,3G  4,5G  34% /
+devtmpfs                 211M     <span class="m">0</span>  211M   0% /dev
+tmpfs                     44M  416K   44M   1% /run
+tmpfs                    5,0M     <span class="m">0</span>  5,0M   0% /run/lock
+tmpfs                     88M     <span class="m">0</span>   88M   0% /run/shm
+/dev/mmcblk0p1            56M   19M   38M  34% /boot
+/dev/sda3                 12G  2,5G  8,5G  23% /home/pi/mnt/media1
+/dev/sdb1                 30G  2,0G   26G   7% /home/pi/mnt/media2
+/dev/sda2                9,8G  266M  9,0G   3% /home/pi/mnt/home
+https://dav.box.com/dav   10G     <span class="m">0</span>   10G   0% /home/pi/mnt/box1
+encfs                     10G     <span class="m">0</span>   10G   0% /home/pi/mnt/encbox1
+</pre></div>
+
+
+<p>In my case, I want to make a backup of /home/pi/mnt/home (which is a mount point for an external USB drive (see previous parts of this tutorial)) into /home/pi/mnt/encbox1. </p>
+<p>The command you want to run is:</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> ~/mnt
+rsync -rtvuh --progress --delete home encbox1
+</pre></div>
+
+
+<p>This syncs whatever is in ~/mnt/home into ~/mnt/encbox1. -r means recursive, t to preserve modification times, v for verbose, h for human readable sizes. --delete makes files be deleted on encbox1 if they were deleted on home.</p>
+<div class="codehilite"><pre><span></span>crontab -e
+</pre></div>
+
+
+<p>Now we setup cron so that this command is executed every day at 12:00. For this, type:</p>
+<div class="codehilite"><pre><span></span>crontab -e
+</pre></div>
+
+
+<p>An editor appears, in my case it is nano. Insert a line like the following:</p>
+<div class="codehilite"><pre><span></span><span class="m">0</span> <span class="m">12</span> * * * rsync -rtvuhW --progress --delete --inplace /home/pi/mnt/home/ /home/pi/mnt/encbox1/ &gt;&gt; /home
+/pi/.log/boxbackups.log
+</pre></div>
+
+
+<p>This line has the following semantic: At minute 0 of hour 12, every day of the month, every month of the year, every day of the week. run the rsync command. </p>
+<p>The rsync flags are important. without --inplace, rsync creates all files with 0 bytes. This is a known issue when rsyncing to a network folder. Also, all paths are absolute, to avoid issues the output is concatenated to a log file (/home/pi/.log/boxbackups.log) so that we can later see what was backed up. </p>
+<h1>References</h1>
+<ul>
+<li>http://www.sbprojects.com/projects/raspberrypi/webdav.php</li>
+<li>http://www.howtoforge.com/encrypt-your-data-with-encfs-debian-squeeze-ubuntu-11.10</li>
+<li>http://www.jveweb.net/en/archives/2010/11/synchronizing-folders-with-rsync.html</li>
+<li>http://www.google.com :P</li>
+</ul>
+<h1>Admin</h1>
+<p>This post was originally posted on my <a href="http://jumpifzero.blogspot.co.uk/2014/04/storing-you-raspberry-pi-files.html">previous blog</a> and very minorly edited when moving over. </p>
+<p>Alternative titles: </p>
+<ul>
+<li>Mount box.com on raspberry pi </li>
+<li>Encrypt files with encFs on raspberry pi </li>
+</ul>
+<p>Last updated at 11 January 2017.</p>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/building-a-raspberry-pi-nas-part-3-storing-files-encrypted-in-the-cloud.html';
+      this.page.identifier = 'posts/building-a-raspberry-pi-nas-part-3-storing-files-encrypted-in-the-cloud.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>
