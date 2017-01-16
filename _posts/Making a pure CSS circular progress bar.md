@@ -1,14 +1,18 @@
-# Build it! - A pure css circular progress bar
+# Making a pure css circular progress bar
 
  
-This post presents a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes this approach very fast to load and render. To achieve it, some interesting css tricks involving hidding and cutting bits are needed. Shall we?
+This post describes a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes the approach very fast to load and render. I did not invent the technique but the post goes to a great length explaining how this can be done with just css.
+
+This is how it looks like:
+
 
 ![sample](images/cssprogbar-sample.png)
 
-[Live demo](/demo/circ-prog-bar/index.html)
+And the mandatory [Live demo](/demo/circ-prog-bar/index.html). 
+
 
 # Let's start with a square
-A square is just a "block" with both dimensions with the same length. Let's use a div for this.
+A square is just a rectangle with both dimensions with the same length. Let's use a div for this and introduce the progress-cirle css class.
 
 ```html
 <div class="progress-circle">
@@ -21,7 +25,7 @@ A square is just a "block" with both dimensions with the same length. Let's use 
    height: 5em;
 }
 ```
-Here we use em as units as this will allow the control to scale everything based on font-size. 
+We use em as units as this will allow the control to scale proportionally based on font-size. 
 
 # Making it round
 To make it round, we use an old css trick: If you pick a square and give it a 50% border radius, it becomes a circle.
