@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Tiago Almeida">
+    <meta name="description" content="A blog on Software engineering and computer programming">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton-plus.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/codehilite.css">
+    <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/advent-of-code-2016-day-5-solution-commented.html" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <title>Tiago Almeida on Software</title>
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+
+      @media (max-width: 550px) {
+        body {
+          text-align: justify;
+        }
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+        <h1>Advent Of Code 2016 - Day 5 solution commented</h1>
+<p>This is part of a series where I comment my solutions to the advent of code series of programming problems.</p>
+<h2>The problem</h2>
+<p>The original problem, with an amusing tale for motivation can be found <a href="http://adventofcode.com/2016/day/5">here</a>. 
+For the purposes of this it is sufficient to know the following:</p>
+<p>You arrive at a password protected door with ID 'uqwqemis'.</p>
+<p>The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID (the puzzle input) and an increasing integer index (starting with 0).</p>
+<p>A hash indicates the next character in the password if its hexadecimal representation starts with five zeroes. If it does, the sixth character in the hash is the next character of the password.</p>
+<p>For example, if the Door ID is abc:</p>
+<p>The first index which produces a hash that starts with five zeroes is 3231929, which we find by hashing abc3231929; the sixth character of the hash, and thus the first character of the password, is 1.
+5017308 produces the next interesting hash, which starts with 000008f82..., so the second character of the password is 8.
+The third time a hash starts with five zeroes is for abc5278568, discovering the character f.
+In this example, after continuing this search a total of eight times, the password is 18f47a30.</p>
+<h2>My solution overview</h2>
+<p>The problem can be solved by taking the fixed input ID and successively trying different integers, increasing from 0. </p>
+<p>So, we want to compute
+- MD5(door_ID,0)
+- MD5(door_ID,1)
+- MD5(door_ID,2)
+- ...</p>
+<p>For each one we check if it starts with five zeroes. If it does we append the sixth char of the hash into the password. </p>
+<p>The process stops when the password has 8 characters.</p>
+<p>As an additional challenge, i've decided to try implementing this in Clojure. A lisp-like language that runs on the JVM. It was my first experience with the language.</p>
+<h2>Commented solution</h2>
+<p>The whole code for the solution can be found <a href="https://github.com/jumpifzero/adventofcode2016/blob/master/day5/src/app/core.clj">here</a></p>
+<p>The general process is this:</p>
+<p>Start with a lazy list of successive integers from 0.
+For each one, prepend the door ID. This is a good problem for a map, which produces another list.
+From this list of door_ID,Counter we use a map for getting the corresponding items md5 hashes. </p>
+<p>In clojure this is done for instance with:</p>
+<div class="codehilite"><pre><span></span><span class="p">(</span><span class="nb">map</span> <span class="nv">digest/md5</span> 
+    <span class="p">(</span><span class="nb">map</span> <span class="p">(</span><span class="nv">fn</span> <span class="nv">[s]</span> <span class="p">(</span><span class="nv">str</span> <span class="nv">door-id-str</span> <span class="nv">s</span><span class="p">))</span> 
+        <span class="p">(</span><span class="nv">range</span><span class="p">)))</span>
+</pre></div>
+
+
+<p>Reading inside-out we have (range) that produces a list of integers from 0.
+str is a function that produces a string, essentially concatenating door-id-str with its argument s. This anonymous function (fn) is used on the inner map to produce a list of door_ID,Counter for all values of Counter from 0 to above.</p>
+<p>This is fed into a second map with a library function digest/md5 to get the md5 hashes of those strings.</p>
+<p><strong>Isn't this an infinite list??</strong></p>
+<p>It is! If you tried to print the result of the expression above, it would go on forever as it is using all integers from 0 until infinity. The beauty is that (range) doesn't actually return such a list. Instead, it returns <em>something</em> that knows how to get the next element in the sequence. This is called a lazy sequence in many languages.
+Further down you'll see how the process stops.</p>
+<p>So now, we have a list of hashes. We'll need to process it one item a time and in order. </p>
+<p>For each item, we see if it starts with five zeroes. When it does, we get the sixth char, when it does not, we just skip it. We can stop looking at items in the list when the resulting password is already 8 chars long.</p>
+<p>There are many ways to do this. A simple for loop would work. Instead I went with a reduce, which is a common pattern for taking a sequence and another function f, apply f to successive pairs of elements in the sequence and return a single element. <em>Reduce</em> the sequence into one thing.</p>
+<p>This is done in the following bit of code:</p>
+<div class="codehilite"><pre><span></span><span class="p">(</span><span class="nb">reduce</span> 
+    <span class="p">(</span><span class="nv">fn</span> <span class="nv">[password</span> <span class="nv">token]</span> 
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nb">count</span> <span class="nv">password</span><span class="p">)</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">reduced</span> <span class="nv">password</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nv">subs</span> <span class="nv">token</span> <span class="mi">0</span> <span class="mi">5</span><span class="p">)</span> <span class="s">&quot;00000&quot;</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">str</span> <span class="nv">password</span> <span class="p">(</span><span class="nv">subs</span> <span class="nv">token</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">))</span> 
+          <span class="nv">password</span><span class="p">)))</span>
+    <span class="s">&quot;&quot;</span>
+    <span class="nv">list_of_md5_hashes</span>
+</pre></div>
+
+
+<p>Let's break it down.</p>
+<p>The general pattern we want is <code>(reduce process_item_function initial_password list_of_md5_hashes)</code>.</p>
+<ul>
+<li>initial_password is an empty string (we don't know any password character yet!). This is the "" above.</li>
+<li>list_of_md5_hashes is what we got earlier with the maps.</li>
+<li>process_item_function is a function that will get the password we got so far, and an item from the list (here called token). It needs to do two things:<ol>
+<li>See if the password is already 8 chars long. If it is break the outer reduce with it (our overall result): <code>(reduced password)</code></li>
+<li>See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token appended. <code>(if (= (subs token 0 5) "00000") ...</code></li>
+</ol>
+</li>
+</ul>
+<h2>Final remarks</h2>
+<p>Really like how clojure makes this solution very short and readable. The whole thing is 33 lines with empty lines and comments.</p>
+<h2>Admin</h2>
+<p>Last updated at 16/01/2017</p>
+        </div>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/advent-of-code-2016-day-5-solution-commented.html';
+      this.page.identifier = 'posts/advent-of-code-2016-day-5-solution-commented.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>

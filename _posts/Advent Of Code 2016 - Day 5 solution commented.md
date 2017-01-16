@@ -83,14 +83,13 @@ This is done in the following bit of code:
 Let's break it down.
 
 
-The general pattern we want is (reduce process_item_function initial_password list_of_md5_hashes).
+The general pattern we want is `(reduce process_item_function initial_password list_of_md5_hashes)`.
 
 - initial_password is an empty string (we don't know any password character yet!). This is the "" above.
 - list_of_md5_hashes is what we got earlier with the maps.
 - process_item_function is a function that will get the password we got so far, and an item from the list (here called token). It needs to do two things:
-
-..1. See if the password is already 8 chars long. If it is break the outer reduce with it (our overall result): `(reduced password)`
-..2. See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token appended. `(if (= (subs token 0 5) "00000") ...`
+    1. See if the password is already 8 chars long. If it is break the outer reduce with it (our overall result): `(reduced password)`
+    2. See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token appended. `(if (= (subs token 0 5) "00000") ...`
 
 
 ## Final remarks

@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Tiago Almeida">
     <meta name="description" content="A blog on Software engineering and computer programming">
-    <title>Tiago Almeida on Software</title>
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton-plus.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/codehilite.css">
     <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/building-a-raspberry-pi-nas-part-3-storing-files-encrypted-in-the-cloud.html" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <title>Tiago Almeida on Software</title>
     <style type="text/css">
       .header {
         margin-top:5em;
@@ -41,8 +44,9 @@
   </head>
   <body class="post">
     <div class="container">
-      <div class="twelve columns">
-      <h1>Building a Raspberry Pi NAS - Part 3: Storing files encrypted in the cloud</h1>
+      <div class="row">
+        <div class="twelve columns">
+        <h1>Building a Raspberry Pi NAS - Part 3: Storing files encrypted in the cloud</h1>
 <p>This post is part of a series on building the ultimate NAS system with a raspberry pi, creating your own "cloud".</p>
 <p>In this post I'll present a way to make sure you do not lose your important files.</p>
 <p>For this, we'll setup a personal account on a cloud service provider and then mount the space they give us on the raspberry pi's file system. The files will be replicated remotely to this service to prevent data loss if local file systems fail.</p>
@@ -301,6 +305,7 @@ rsync -rtvuh --progress --delete home encbox1
 <li>Encrypt files with encFs on raspberry pi </li>
 </ul>
 <p>Last updated at 11 January 2017.</p>
+        </div>
       </div>
       <h1>Comments</h1>
       <div id="disqus_thread"></div>

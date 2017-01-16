@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Tiago Almeida">
     <meta name="description" content="A blog on Software engineering and computer programming">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton-plus.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/codehilite.css">
     <link rel="canonical" href="https://jumpifzero.github.io/posts/{{target_html_name}}" />
@@ -42,8 +44,10 @@
   </head>
   <body class="post">
     <div class="container">
-      <div class="twelve columns">
-      {{content}}
+      <div class="row">
+        <div class="twelve columns">
+        {{content}}
+        </div>
       </div>
       <h1>Comments</h1>
       <div id="disqus_thread"></div>
