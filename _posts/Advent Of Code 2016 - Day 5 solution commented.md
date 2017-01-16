@@ -3,7 +3,7 @@
 This is part of a series where I comment my solutions to the advent of code series of programming problems.
 
 ## The problem
-The original problem, with an amusing tale for motivation can be found [here](http://adventofcode.com/2015/day/5). 
+The original problem, with an amusing tale for motivation can be found [here](http://adventofcode.com/2016/day/5). 
 For the purposes of this it is sufficient to know the following:
 
 You arrive at a password protected door with ID 'uqwqemis'.
@@ -24,9 +24,9 @@ In this example, after continuing this search a total of eight times, the passwo
 The problem can be solved by taking the fixed input ID and successively trying different integers, increasing from 0. 
 
 So, we want to compute
-- MD5(<door_ID>,0)
-- MD5(<door_ID>,1)
-- MD5(<door_ID>,2)
+- MD5(door_ID,0)
+- MD5(door_ID,1)
+- MD5(door_ID,2)
 - ...
 
 For each one we check if it starts with five zeroes. If it does we append the sixth char of the hash into the password. 
@@ -42,7 +42,7 @@ The general process is this:
 
 Start with a lazy list of successive integers from 0.
 For each one, prepend the door ID. This is a good problem for a map, which produces another list.
-From this list of <door_ID><Counter> we use a map for getting the corresponding items md5 hashes. 
+From this list of door_ID,Counter we use a map for getting the corresponding items md5 hashes. 
 
 In clojure this is done for instance with:
 ```lisp
@@ -51,7 +51,7 @@ In clojure this is done for instance with:
 		(range)))
 ```
 Reading inside-out we have (range) that produces a list of integers from 0.
-str is a function that produces a string, essentially concatenating door-id-str with its argument s. This anonymous function (fn) is used on the inner map to produce a list of <door_ID><Counter> for all values of Counter from 0 to above.
+str is a function that produces a string, essentially concatenating door-id-str with its argument s. This anonymous function (fn) is used on the inner map to produce a list of door_ID,Counter for all values of Counter from 0 to above.
 
 This is fed into a second map with a library function digest/md5 to get the md5 hashes of those strings.
 
@@ -90,7 +90,7 @@ The general pattern we want is (reduce process_item_function initial_password li
 - process_item_function is a function that will get the password we got so far, and an item from the list (here called token). It needs to do two things:
 
 ..1. See if the password is already 8 chars long. If it is break the outer reduce with it (our overall result): `(reduced password)`
-..2. See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token. `(if (= (subs token 0 5) "00000") ...`
+..2. See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token appended. `(if (= (subs token 0 5) "00000") ...`
 
 
 ## Final remarks
