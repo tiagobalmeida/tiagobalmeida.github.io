@@ -1,5 +1,9 @@
 body {
+  font-family: 'Ubuntu', sans-serif;
   padding: 1em;
+}
+a, a:visited, a:hover, a:focus, a:active { 
+  text-decoration: none;
 }
 .post h1 {
   margin-top: 1.2em;
@@ -8,6 +12,9 @@ body {
 .post h2 {
   margin-top: 1.2em;
   margin-bottom: 1.2em;
+}
+.post p {
+  margin: 0;
 }
 .post .codehilite pre {
   overflow-x: auto;
