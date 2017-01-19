@@ -12,15 +12,14 @@ a:active {
   text-decoration: none;
 }
 .post h1 {
-  margin-top: 1.2em;
+  margin-top: 3rem;
   margin-bottom: 1.2em;
+  font-weight: bold;
 }
 .post h2 {
-  margin-top: 0.5em;
+  margin-top: 3rem;
   margin-bottom: 0;
-}
-.post p {
-  margin: 0;
+  font-weight: bold;
 }
 .post .codehilite pre {
   overflow-x: auto;
@@ -46,7 +45,7 @@ img {
 }
 h1,
 h1 * {
-  font-size: 1.7rem;
+  font-size: 2.4rem;
 }
 @media (max-width:750px) {
   h1,
@@ -56,51 +55,51 @@ h1 * {
 }
 h2,
 h2 * {
-  font-size: 1.6rem;
+  font-size: 2.2rem;
 }
 @media (max-width:750px) {
   h2,
   h2 * {
-    font-size: 1.5rem;
+    font-size: 2.1rem;
   }
 }
 h3,
 h3 * {
-  font-size: 5rem;
+  font-size: 2.1rem;
 }
 @media (max-width:750px) {
   h3,
   h3 * {
-    font-size: 1.4rem;
+    font-size: 2.0rem;
   }
 }
 h4,
 h4 * {
-  font-size: 1.4rem;
+  font-size: 2.0rem;
 }
 @media (max-width:750px) {
   h4,
   h4 * {
-    font-size: 1.3rem;
+    font-size: 1.9rem;
   }
 }
 h5,
 h5 * {
-  font-size: 1.3rem;
+  font-size: 1.9rem;
 }
 @media (max-width:750px) {
   h5,
   h5 * {
-    font-size: 1.2rem;
+    font-size: 1.8rem;
   }
 }
 h6,
 h6 * {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
 }
 @media (max-width:750px) {
   h6,
   h6 * {
-    font-size: 1.1rem;
+    font-size: 1.7rem;
   }
 }
