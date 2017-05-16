@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Tiago Almeida">
+    <meta name="description" content="A blog on Software engineering and computer programming">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton-plus.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/codehilite.css">
+    <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/batch-downsizing-a-set-of-images.html" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <title>Tiago Almeida on Software</title>
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+        <p>Say you have a bunch of images you want to downsize.</p>
+<div class="codehilite"><pre><span></span>dev@phobos:~/projects/my-images$ ls *.jpg
+10.jpg  12.jpg  14.jpg  16.jpg  18.jpg  1.jpg   21.jpg  23.jpg  25.jpg  27.jpg  29.jpg  30.jpg  32.jpg  3.jpg  5.jpg  7.jpg  9.jpg
+11.jpg  13.jpg  15.jpg  17.jpg  19.jpg  20.jpg  22.jpg  24.jpg  26.jpg  28.jpg  2.jpg   31.jpg  33.jpg  4.jpg  6.jpg  8.jpg
+</pre></div>
+
+
+<p>These can easily be downsized in one go with the following command:</p>
+<div class="codehilite"><pre><span></span>mkdir downsized
+ls -1 *.jpg <span class="p">|</span> xargs -t -I % convert % -resize 1024x1024<span class="se">\&gt;</span> downsized/%
+</pre></div>
+
+
+<h2>Explanation</h2>
+<p>ls -1 lists all files one by line.</p>
+<p>xargs by default reads every line of the stdin and then runs the command after it with the stdin line as an argument. -t tells xargs to print the command before executing it, which is usefull to get some progress. -I makes it replace whatever comes after the command with the actual stdin input.</p>
+<p>The program that does the resizing is convert (imagemagick) which has an option to only resize down. In this case, if the image is larger than 1024x1024 it is resized, otherwise it remains as is. 1024x1024> is <em>not</em> an output redirection but rather how you tell convert to only process if the image is <em>greater than</em>. </p>
+        </div>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/batch-downsizing-a-set-of-images.html';
+      this.page.identifier = 'posts/batch-downsizing-a-set-of-images.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>

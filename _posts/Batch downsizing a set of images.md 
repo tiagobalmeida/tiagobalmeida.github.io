@@ -1,0 +1,25 @@
+Say you have a bunch of images you want to downsize.
+
+```bash
+dev@phobos:~/projects/my-images$ ls *.jpg
+10.jpg  12.jpg  14.jpg  16.jpg  18.jpg  1.jpg   21.jpg  23.jpg  25.jpg  27.jpg  29.jpg  30.jpg  32.jpg  3.jpg  5.jpg  7.jpg  9.jpg
+11.jpg  13.jpg  15.jpg  17.jpg  19.jpg  20.jpg  22.jpg  24.jpg  26.jpg  28.jpg  2.jpg   31.jpg  33.jpg  4.jpg  6.jpg  8.jpg
+```
+
+These can easily be downsized in one go with the following command:
+
+```bash
+mkdir downsized
+ls -1 *.jpg | xargs -t -I % convert % -resize 1024x1024\> downsized/%
+```
+
+Explanation
+------------
+
+ls -1 lists all files one by line.
+
+
+xargs by default reads every line of the stdin and then runs the command after it with the stdin line as an argument. -t tells xargs to print the command before executing it, which is usefull to get some progress. -I makes it replace whatever comes after the command with the actual stdin input.
+
+The program that does the resizing is convert (imagemagick) which has an option to only resize down. In this case, if the image is larger than 1024x1024 it is resized, otherwise it remains as is. 1024x1024\> is *not* an output redirection but rather how you tell convert to only process if the image is *greater than*. 
+
