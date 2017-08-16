@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Tiago Almeida">
+    <meta name="description" content="A blog on Software engineering and computer programming">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton-plus.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/codehilite.css">
+    <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/tip-run-a-command-when-a-file-changes.html" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <title>Tiago Almeida on Software</title>
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+        <h1>Tip: Run a command when a file changes</h1>
+<h2>The problem</h2>
+<p>Say you'd like to run a command when a file changes, automatically. </p>
+<p>For example, I'm using this to call the LessCSS compiler when I save the .less file.</p>
+<p>i.e. in this example, I'd like to run the following command everytime the style.less file is changed:</p>
+<div class="codehilite"><pre><span></span>lessc src/css/style.less &gt; src/css/style.css
+</pre></div>
+
+
+<h2>Solution</h2>
+<p>Install the inotify-tools package</p>
+<div class="codehilite"><pre><span></span>sudo apt install inotify-tools
+</pre></div>
+
+
+<p>To set up a command to run automatically, we can do this:</p>
+<div class="codehilite"><pre><span></span><span class="k">while</span> inotifywait -e close_write src/css/style.less<span class="p">;</span> <span class="k">do</span> lessc src/css/style.less &gt; src/css/style.css<span class="p">;</span> <span class="k">done</span>
+</pre></div>
+
+
+<p>More generally, the syntax is the following:</p>
+<div class="codehilite"><pre><span></span><span class="k">while</span> inotifywait -e close_write /my/file<span class="p">;</span> <span class="k">do</span> mycommand<span class="p">;</span> <span class="k">done</span>
+</pre></div>
+
+
+<p>Awesome!</p>
+        </div>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/tip-run-a-command-when-a-file-changes.html';
+      this.page.identifier = 'posts/tip-run-a-command-when-a-file-changes.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>
