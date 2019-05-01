@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Tiago Almeida">
+        <meta name="description" content="A blog on Software engineering and computer programming">
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/skeleton-plus.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/codehilite.css">
+        <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/designing-and-building-a-keyboard-from-scratch.html" />
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <title>Tiago Almeida on Software</title>
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+        <h1>Designing and building a keyboard from scratch - Part 1</h1>
+<p>I've recently finished a side project: A USB keyboard designed and built from scratch, i.e. not using any kit.</p>
+<p>Here it is in all its temporary case glory:</p>
+<p><img alt="Keyboard" src="images/keyb.jpg" /></p>
+<p>This post is about the why and how.</p>
+<h1>But why?</h1>
+<p><img alt="But why" src="images/butwhy.gif" /></p>
+<p>Simple. I wanted a keyboard with the following features:</p>
+<h2>Mechanical switches</h2>
+<p>The feel and of these switches is amazing. This is something you’ll have to try for yourself. Go to a computer store, into the gaming section and type on the “Gaming” keyboards. 
+Most of them have so called mechanical switches, with different hardnesses, clicks and tactile feedbacks. </p>
+<p>For this keyboard, I’ve opted for Gateron Browns just because it was easier to source a bag of these than original Cherry MX. 
+Browns are not clicky and tactile. </p>
+<p>Here’s a sound difference, mechanical vs "typical" membrane switches: <a href="https://www.youtube.com/embed/CVtjCbpW7as?start=64">Youtube</a></p>
+<h2>Dual Layout</h2>
+<p>I type in English and Portuguese. Trying to type PT in a British keyboard is a pain. Technically the two layouts have exactly the same number of keys (ISO layout, used in most countries) but the symbols printed on the plastic keycaps are different. If I configure the operating system to think it’s a Portuguese keyboard while using a British one, then i’ll have to type blindly. </p>
+<p><img alt="Blindly" src="images/blindly.jpg" /></p>
+<p>Above: a British keyboard. Good luck figuring out which of those keys map to the following Portuguese symbols: Ç á à é</p>
+<h2>Dedicated keys for common sequences</h2>
+<p>Depending what you do on your day job I suspect there’s sequences of characters you type over and over. Here’s a bunch them for me:</p>
+<ul>
+<li>“”</li>
+<li>‘’</li>
+<li>[]</li>
+<li>()</li>
+</ul>
+<p>These symbols are almost always entered in pairs. They’re also typed so frequently they should have their own keys. Some do, some don't. On this keyboard, there are fixed keys for these above the arrows. Pressing any of those immediately enters the two symbols followed by a "move left" so the cursor goes inside the pair. It works in a good code editor or even in Microsoft Word!</p>
+<p><img alt="Special keys" src="images/specialkeys.jpg" /></p>
+<p>Yes. I know the top plate looks dodgy at the moment. This is being worked on ;)</p>
+<h2>Dynamic macros</h2>
+<p>Beyond the sequences above, there are also sequences of characters you'll type frequently but that change over time. </p>
+<p>Perhaps it is your company name, or your user name or a password for a test system? Some examples from me:</p>
+<ul>
+<li><code>Password123</code> (Some password for a development system)</li>
+<li><code>function( ) { }</code> </li>
+<li><code>new Promise(function(resolve, reject) { })</code></li>
+</ul>
+<p>Code editors have facilities to accelerate these common sequences but they’re dependent on the program you’re typing in. I find it annoying to jump to a different program that doesn't have the same <code>snippets</code> I'm used to. </p>
+<p>The idea here is that the keyboard <em>can</em> record sequences and then play them back at the touch of a key.</p>
+<p>On this keyboard this was implemented with an extra row of keys above the F row. Called the Macros row. </p>
+<p>Here's how you record a new sequence:</p>
+<ol>
+<li>Hit the red record key </li>
+<li>Type normally</li>
+<li>Hit the Mx macro. This will assign everything you typed to that key.</li>
+</ol>
+<p>From now on, hitting that Mx key again will replay that sequence. To change it just record again over the same key it. To exit recording mode, press the record button again.</p>
+<p>Some commercial keyboards have this functionality but force the user to install a program to manage these mappings. This is silly in my opinion.</p>
+<h2>Geek fun!</h2>
+<p>Had a lot of fun building this and feel both proud and amazed that I can actually type with it :) The feel is amazing to be honest.</p>
+<p>Nevertheless, I won’t lie, this was a tremendous amount of work! Here's the general recipe followed:</p>
+<ul>
+<li>Design a custom circuit using Kicad.</li>
+<li>Turn the circuit into an actual printed circuit board (PCB) with the help of a PCB manufacturing company.</li>
+<li>Order switches, diodes, connectors, cables, etc.</li>
+<li>Solder the 100 switches + 100 diodes. Replace the soldering iron tip midway because it got knackered.</li>
+<li>Design a 3D model for a case and ask a company to print it.</li>
+<li>Use Inkscape to design the custom print on top of the keycaps (remember: dual GB+PT symbols)</li>
+<li>Assemble everything.</li>
+<li>Write code for the Arduino firmware and program it.</li>
+</ul>
+<p>Start to finish it took about 8 months, working on weekends here and there, waiting for parts from China, correcting mistakes along the way... I'd argue it isn't finished yet as I'd really like a machined metal case for it as that was the plan from the start :) maybe one day...</p>
+<p>In part 2 I'll deep dive into the technical details: from designing the circuit, getting it printed, all the way to the software running on the micro. </p>
+<p>Stay tuned if you're curious about it.</p>
+<h1>See also</h1>
+<p><a href="https://deskthority.net/">Deskthority</a></p>
+<p><a href="https://geekhack.org/index.php">Geekhack</a></p>
+<p><a href="https://github.com/BenRoe/awesome-mechanical-keyboard">https://github.com/BenRoe/awesome-mechanical-keyboard</a></p>
+<p><a href="http://blakesmith.me/2019/01/16/making-my-own-usb-keyboard-from-scratch.html">Similar write up</a></p>
+        </div>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/designing-and-building-a-keyboard-from-scratch.html';
+      this.page.identifier = 'posts/designing-and-building-a-keyboard-from-scratch.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>
