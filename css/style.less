@@ -10,12 +10,27 @@ body {
 	font-family: 'Ubuntu', sans-serif;
     Font-family: 'Merriweather', serif; 
 }
-a, a:visited, a:hover, a:focus, a:active { 
+a, a:visited, a:hover, a:focus, a:active {  
 	text-decoration: none;
 }
 h1, h2, h3, a{
     padding: 0;
     margin: 0;
+}
+.header-wrap {
+    .name {
+        font-size: 4rem;
+    }
+    .avatar {
+        max-height: 42px;
+    }
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: block;
+    height: 42px;
+    background: #fff;
+    z-index: 1;
 }
 .container {
     max-width: 960px;
