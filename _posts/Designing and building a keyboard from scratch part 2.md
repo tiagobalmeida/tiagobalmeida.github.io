@@ -2,7 +2,7 @@
 
 ## The innards of a keyboard
 
-Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to theconnected computer. You press a key, a message is sent with the key's numeric code and the fact it was pressed. You release the key, another message is sent. 
+Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key's numeric code and the fact it was pressed. You release the key, another message is sent. 
 
 Nowadays the common way to transfer these messages is through USB.
 
@@ -62,6 +62,8 @@ The micro has therefore 7+3 IO pins used.
 
 Here's a screenshot of the schematic:
 
+![Schematic](images/schematic.png)
+
 ### PCB
 
 A key design decision of this project was to make it modular. The PCB should not be tied to the microcontroller, i.e. it should be possible to use the same switch matrix with different microcontrollers. For this reason, the PCB contiains male connectors and the micro is connected with wires that run underneath the PCB.
@@ -73,7 +75,9 @@ There are exactly 3 connectors:
 
 One mistake I did here was to put these connectors in opposite corners of the PCB. It seemed sensible at the time given the space available on the PCB but it meant long wires.
 
-Here's a picture:
+Here's a picture of the rows connector at the top left corner:
+
+![Rows Connector](images/jzmk/rows-connector.jpg)
 
 #### PCB design
 
@@ -84,6 +88,8 @@ The first step was to create a schematic, this is fairly simple, you drag a swit
 Next step is to assign _footprints_ to the all the components in the schematic. A footprint defines the physical shape and dimensions of each component. Kicad is brilliant that it already brings footprints for Cherry MX switches (as well as thousands of other components). So the task here was to map each switch to the right footprint. (for example, the _shift_ key being wider has a different footprint than most other keys).
 
 Here's the footprint mapping dialog in Kicad:
+
+![Assign Footprints](images/jzmk/assign-footprints.png)
 
 Once this is done you jump to the PCB layout. What you see is a pile of footprint switches. The task is to drag the right switch to the right place. Essentially a 200 piece puzzle where every component looks like any other.
 
@@ -116,17 +122,22 @@ The production process was dead easy from my perspective. Upload the zip file wi
 
 Here's a picture of what appeared at the door about 15 days later:
 
+![JLC Box](images/jzmk/jlcpcbbox.jpg)
+
+![PCB with 2 switches](images/jzmk/pcb-2sw.jpg)
+
 Awesome!
 
 ### Soldering
 
 Not much to say here. I had sourced the Gateron Brown switches and a bunch of diodes from aliexpress. Soldering was interesting... It took me about two hours of non contiguous work to solder everything. Used lead free solder which is a bit hard to work with but I could see I've gotten progressively better as I went along. Still, a job I find hard to do. Perhaps with a temperature controlled soldering iron it would have been easier.
 
+![Leads](images/jzmk/leads.jpg)
+
 Glad it was finished though :)
 
-Here's a picture of the finished thing:
+Here's a pic of the soldering job almost finished:
 
-This post is getting long. In part 3 I'll discuss the firmware design. Stay tuned.
+![Almost Finished soldering](images/jzmk/almost-finished.jpg)
 
-
-
+Let's discuss the firmware design in part 3. Stay tuned.
