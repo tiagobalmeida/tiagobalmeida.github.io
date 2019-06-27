@@ -66,7 +66,7 @@ Here's a screenshot of the schematic:
 
 A key design decision of this project was to make it modular. The PCB should not be tied to the microcontroller, i.e. it should be possible to use the same switch matrix with different microcontrollers. For this reason, the PCB contiains male connectors and the micro is connected with wires that run underneath the PCB.
 
-There are exactly 3 connectores:
+There are exactly 3 connectors:
  - 2 pin connector for +vcc and gnd.
  - 3 pin connector to drive the columns via the shift registers.
  - 7 pin connector to read the state of the rows.
@@ -91,14 +91,14 @@ Here's a picture of it midway:
 
 ![PCB](images/pcb1.png)
 
-It is extremely important to set the right grid settings and make the components step to the grid. I can't remember the grid settings used but there's a grid dimension that makes everything snap and align perfectly (as the footprints of Cherry MX switches have well defined dimensions).
+It is extremely important to set the right grid settings and make the components snap to the grid. I can't remember the grid settings used but there are grid dimension that makes everything snap and align perfectly (as the footprints of Cherry MX switches have well defined dimensions).
 
-At this stage, the electrical traces are not layed out yet, instead, Kicad draws a straight white line between all pairs of points that needs a connection. This is called a ratsnest view because, well, it looks messy.
+At this stage, the electrical traces are not layed out yet, instead, Kicad draws a straight white line between all pairs of points that need a connection. This is called a "ratsnest" view because, well, it looks messy.
 
 Kicad has an _autoroute_ functionality that automatically lays down the electrical traces and makes sure they don't touch when they shouldn't. This didn't work well for me and I had to resort to doing it manually. Basically, for every one of those white lines, there will have to be a copper trace that connects them. Unlike the white lines, the copper traces usually cannot cross each other. So to put a trace you usually have to side step and go around every other trace. This becomes progressively harder to do the more traces you put in. In fact, my first attempt was a failure and I had to restart from scratch.
 
 On the second attempt I've decided to use two copper layers (top and bottom) and then try to stick to vertical traces at the top and horizontal traces at the bottom.
-On a single layer there are mostly parallel traces so that reduces the points where htey have to cross. A via is used to continue one trace from one layer on the other. A via is literaly a whole that is drilled on the PCB and then filled with conductive material.
+On a single layer there are mostly parallel traces so that reduces the points where they have to cross. A via is used to continue one trace from one layer on the other. A via is literaly a whole that is drilled on the PCB and then filled with conductive material.
 
 Here's a picture of a trace with a via to jump from one layer to the other to work around another component already placed.
 
@@ -120,7 +120,7 @@ Awesome!
 
 ### Soldering
 
-Not much to say here. I sourced the Gateron Brown switches and a bunch of diodes from aliexpress. Soldering was interesting... It took me about two hours of non contiguous work to solder everything. Used lead free solder which is a bit hard to work with but I could see I've gotten progressively better as I went along. Still, a job I find hard to do. Perhaps with a temperature controlled soldering iron it would have been better.
+Not much to say here. I had sourced the Gateron Brown switches and a bunch of diodes from aliexpress. Soldering was interesting... It took me about two hours of non contiguous work to solder everything. Used lead free solder which is a bit hard to work with but I could see I've gotten progressively better as I went along. Still, a job I find hard to do. Perhaps with a temperature controlled soldering iron it would have been easier.
 
 Glad it was finished though :)
 
