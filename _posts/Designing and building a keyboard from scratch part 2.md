@@ -114,7 +114,7 @@ On a single layer there are mostly parallel traces so that reduces the points wh
 
 Here's a picture of a trace with vias to jump from one layer to the other to work around components already placed.
 
-![PCB](images/planes1.png)
+![PCB](images/jzmk/planes1.png)
 
 The red color are traces in one layer and generally can't cross each other, the green traces in the other layer. A via is used to jump from one layer to the other. As a rule of thumb, right angles and vias should be minimized. 
 
