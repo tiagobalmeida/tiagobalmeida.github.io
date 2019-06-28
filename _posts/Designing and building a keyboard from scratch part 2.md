@@ -1,14 +1,17 @@
 # Designing and building a keyboard from scratch - part 2
 
+![PCB](images/jzmk/profile.jpg)
+
 ## The innards of a keyboard
 
-Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key's numeric code and the fact it was pressed. You release the key, another message is sent. 
+Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key's numeric code and the fact it was pressed. You release it, another message is sent. 
 
 Nowadays the common way to transfer these messages is through USB.
 
 Generating USB messages with a custom built circuit is not trivial. The smart way to do it is to use a microcontroller that can natively speak USB. A microcontroller is a chip that contains a CPU, RAM and ROM and input/output devices.
 
 Most non commercial mechanical keyboards use one of the following microcontrollers:
+
  - Atmega32u4
  - Teensy
  - Stm32
@@ -19,13 +22,13 @@ The atmega32u4 is the heart of, for example, the Arduino Leonardo and the Arduin
 
 This little guy has 2KB of RAM, 1KB of EEPROM. It runs plenty fast for this application. 
 
-That 1KB of EEPROM is significant because it limits the total memory for dynamic macros to about 500 characters across all 12 macro keys. More on this below.
+That 1KB of EEPROM is significant because it limits the total memory for dynamic macros to about 500 characters across all 12 macro keys. More on this later.
 
 ### The matrix
 
 The atmega32u4 has about 20 general purpose IO pins. It isn't easy to find a cheap microcontroller with enough IO pins so that you can connect 1 switch to 1 pin. 
 
-Therefore, we need a way to connect 100 switchs to only 20 pins. The usual way to solve this problem is quite interesting: we create a matrix of wires with N rows and M columns. All the switches belonging to the same row have one end connected to the same wire.
+We therefore need a way to connect 100 switchs to only 20 pins. The usual way to solve this problem is quite interesting: we create a matrix of wires with N rows and M columns. All the switches belonging to the same row have one end connected to the same wire.
 
 The other end of the switches which belong to the same vertical column are also connected together. This creates M vertical wires. 
 
@@ -52,9 +55,9 @@ All the row pins are pre-configured to be in INPUT mode with pull ups so if left
 
 We _select_ only one column at a time by setting it to LOW and then read the state of all switches in that column.
 
-Do this fast enough and no human will be able to press a button and have that go undetected.
+Do this fast enough for all columns, one at a time, and no human will be able to press a button and have that go undetected.
 
-You can obviously swap rows and columns. I.e. select rows and read the state of the columns and in fact this is the most common way in other open source keyboards. 
+You can obviously swap rows and columns. I.e. use column pins for sensing and in fact this is the most common way in other open source keyboards. 
 
 This keyboard has 17 columns and 7 rows. Like I said earlier the rows are used for sensing (input). Also, I couldn't connect directly the 17+7 wires to the microcontroller. The 7 rows are connected directly but the state of the columns is controlled with 3 wires using 3 cascaded shift registers.
 
@@ -64,11 +67,14 @@ Here's a screenshot of the schematic:
 
 ![Schematic](images/schematic.png)
 
+Without going too deep on shift registers, they allow the value of the 17 columns to be controlled using only 3 pins on the micro.
+
 ### PCB
 
 A key design decision of this project was to make it modular. The PCB should not be tied to the microcontroller, i.e. it should be possible to use the same switch matrix with different microcontrollers. For this reason, the PCB contiains male connectors and the micro is connected with wires that run underneath the PCB.
 
 There are exactly 3 connectors:
+
  - 2 pin connector for +vcc and gnd.
  - 3 pin connector to drive the columns via the shift registers.
  - 7 pin connector to read the state of the rows.
@@ -77,11 +83,11 @@ One mistake I did here was to put these connectors in opposite corners of the PC
 
 Here's a picture of the rows connector at the top left corner:
 
-![Rows Connector](images/jzmk/rows-connector.jpg)
+![Rows Connector](images/jzmk/rows-connector.jpg**
 
 #### PCB design
 
-Warning: I'm not an Electrical engineer! To design the PCB i've downloaded Kicad, an open source software and then googled. A lot :)
+**Warning**: I'm no Electrical engineer! To design the PCB i've downloaded Kicad, an open source software and then googled. A lot :)
 
 The first step was to create a schematic, this is fairly simple, you drag a switch component, a diode, then connect them with wires and duplicate this to create first a column, then duplicate the column to get a matrix. Sprinkle with some connectors and you're done with the schematic.
 
@@ -106,9 +112,13 @@ Kicad has an _autoroute_ functionality that automatically lays down the electric
 On the second attempt I've decided to use two copper layers (top and bottom) and then try to stick to vertical traces at the top and horizontal traces at the bottom.
 On a single layer there are mostly parallel traces so that reduces the points where they have to cross. A via is used to continue one trace from one layer on the other. A via is literaly a whole that is drilled on the PCB and then filled with conductive material.
 
-Here's a picture of a trace with a via to jump from one layer to the other to work around another component already placed.
+Here's a picture of a trace with vias to jump from one layer to the other to work around components already placed.
 
-The traces on this PCB are generally neat except near the 3 shift registers where everything got a bit too messy. Everything still works but messy enough that I missed one of the connections. A mistake I only detected after soldering everything and wondering why the keyboard didn't work... One of the shift registers didn't have a GND connected.
+![PCB](images/planes1.png)
+
+The red color are traces in one layer and generally can't cross each other, the green traces in the other layer. A via is used to jump from one layer to the other. As a rule of thumb, right angles and vias should be minimized. 
+
+The traces on this PCB are generally OK except near the 3 shift registers where everything got a bit too messy. Everything still works but messy enough that I missed one of the connections. A mistake I only detected after soldering everything and wondering why the board didn't work... One of the shift registers didn't have GND connected.
 
 #### PCB production
 
@@ -130,11 +140,11 @@ Awesome!
 
 ### Soldering
 
-Not much to say here. I had sourced the Gateron Brown switches and a bunch of diodes from aliexpress. Soldering was interesting... It took me about two hours of non contiguous work to solder everything. Used lead free solder which is a bit hard to work with but I could see I've gotten progressively better as I went along. Still, a job I find hard to do. Perhaps with a temperature controlled soldering iron it would have been easier.
+Not much to say here. I had sourced the Gateron Brown switches and a bunch of diodes from aliexpres and I suck at soldering. It took me about two hours of non continuous work to solder everything. Used lead free solder which is a bit hard to work with but still I could see I've gotten progressively better as I went along. 
 
 ![Leads](images/jzmk/leads.jpg)
 
-Glad it was finished though :)
+Glad it was finished though :) Dreading soldering the remaining 4 PCBs.
 
 Here's a pic of the soldering job almost finished:
 
