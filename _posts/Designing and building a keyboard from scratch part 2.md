@@ -1,6 +1,6 @@
 # Designing and building a keyboard from scratch - part 2
 
-![PCB](images/jzmk/prof1024.png)
+![PCB](images/jzmk/prof1024.jpg)
 
 ## The innards of a keyboard
 
