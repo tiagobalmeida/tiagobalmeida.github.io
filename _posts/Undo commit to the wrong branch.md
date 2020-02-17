@@ -17,3 +17,11 @@ git reset --soft HEAD~2
 
 
 ## The right way of fixing this
+
+Run the following right after commiting, assuming you didn't push.
+
+```
+git reset --soft HEAD^
+git checkout branch
+git commit
+```
