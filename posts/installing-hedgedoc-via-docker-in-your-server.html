@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Tiago Almeida">
+        <meta name="description" content="A blog on Software engineering and computer programming">
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/skeleton-plus.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/codehilite.css">
+        <link rel="canonical" href="https://jumpifzero.github.io/posts/posts/installing-hedgedoc-via-docker-in-your-server.html" />
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <title>Tiago Almeida on Software</title>
+    <style type="text/css">
+      .header {
+        margin-top:5em;
+        margin-bottom:5em;
+      }
+      .header > h2 {
+        font-weight: 300;
+      }
+      .header > .button {
+        margin-top: 10px;
+      }
+      .row-example > .row {
+        margin-bottom:10px;
+      }
+      .well {
+        background-color: #ededed;
+        border-radius: 5px;
+        padding: 10px 0;
+      }
+      footer {
+        margin-top: 4em;
+      }
+    </style>
+  </head>
+  <body class="post">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+        <h1>Installing Hedgedoc via docker in your server</h1>
+<p>Hedgedoc (formerly know as CodiMD) is a great way to keep your own notes.</p>
+<h2>Create a hedgedoc user</h2>
+<p><code>adduser hedgedoc</code></p>
+<h2>Install packages</h2>
+<p>Make sure you have docker and docker-compose installed before proceeding.</p>
+<h2>Switch to the hedgedoc user</h2>
+<p><code>sudo su hedgedoc</code></p>
+<h2>Clone hedgedoc</h2>
+<div class="codehilite"><pre><span></span>git clone https://github.com/hedgedoc/container.git hedgedoc-container
+cd hedgedoc-container
+</pre></div>
+
+
+<h2>Change the default configuration</h2>
+<div class="codehilite"><pre><span></span>nano docker-compose.yml
+</pre></div>
+
+
+<p>Add the following to the <code>environment</code> section:</p>
+<div class="codehilite"><pre><span></span> environment:
+      # DB_URL is formatted like: &lt;databasetype&gt;://&lt;username&gt;:&lt;password&gt;@&lt;hostname&gt;:&lt;port&gt;/&lt;database&gt;
+      # Other examples are:
+      # - mysql://hedgedoc:password@database:3306/hedgedoc
+      # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
+      # - For details see the official sequelize docs: http://docs.sequelizejs.com/en/v3/
+      - CMD_DOMAIN=192.168.1.x
+      - CMD_URL_ADDPORT=true
+      - CMD_DB_URL=...
+      - CMD_EMAIL=true
+      - CMD_IMAGE_UPLOAD_TYPE=filesystem
+    volumes:
+      - uploads:/he
+</pre></div>
+
+
+<h2>Enable docker service</h2>
+<div class="codehilite"><pre><span></span>systemctl enable docker
+</pre></div>
+
+
+<h2>Start hedgedoc</h2>
+<div class="codehilite"><pre><span></span>docker-compose up
+</pre></div>
+
+
+<p>If the above eventually succeeds you'll see <code>listening on port 3000</code>. 
+In that case, run it in the background:</p>
+<div class="codehilite"><pre><span></span>docker-compose up -d
+</pre></div>
+        </div>
+      </div>
+      <h1>Comments</h1>
+      <div id="disqus_thread"></div>
+      <footer class="twelve columns">
+        <span class="post_footer"><a href="/">A blog by Tiago Almeida.</a></span>
+      </footer>
+    </div>
+    <!-- Disqus -->
+    <script>
+      var disqus_config = function () {
+      this.page.url = 'https://jumpifzero.github.io/posts/posts/installing-hedgedoc-via-docker-in-your-server.html';
+      this.page.identifier = 'posts/installing-hedgedoc-via-docker-in-your-server.html';
+      };
+      
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//tiagoalmeidaonsoftware.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </body>
+</html>
