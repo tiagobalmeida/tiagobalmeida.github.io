@@ -1,6 +1,6 @@
 argh==0.26.2
 html2text==2016.9.19
-Jinja2==2.8
+Jinja2==2.11.3
 lesscpy>=0.12.0
 Markdown==2.6.7
 MarkupSafe==0.23
