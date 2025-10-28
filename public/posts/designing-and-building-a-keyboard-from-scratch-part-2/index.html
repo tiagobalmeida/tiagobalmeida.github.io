@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Designing and Building a Keyboard From Scratch - Part 2 :: blog.tiagodev.space</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+The innards of a keyboard Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key&rsquo;s numeric code and the fact it was pressed. You release it, another message is sent.
+Nowadays the common way to transfer these messages is through USB.
+" />
+<meta name="keywords" content=", " />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/terminal.min.e24bf84cafb9e94502324a0c4264d65e9ed1870838db3e47393dfaa83dd5abb4.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://blog.tiagodev.space/favicon.png">
+<link rel="apple-touch-icon" href="https://blog.tiagodev.space/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Designing and Building a Keyboard From Scratch - Part 2">
+<meta property="og:description" content="
+The innards of a keyboard Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key&rsquo;s numeric code and the fact it was pressed. You release it, another message is sent.
+Nowadays the common way to transfer these messages is through USB.
+" />
+<meta property="og:url" content="https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/" />
+<meta property="og:site_name" content="blog.tiagodev.space" />
+
+  
+  
+  <meta property="og:image" content="https://blog.tiagodev.space/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2019-06-28 15:18:52 &#43;0100 BST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    blog.tiagodev.space
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/">Designing and Building a Keyboard From Scratch - Part 2</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2019-06-28</time></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://blog.tiagodev.space/tags/"></a>&nbsp;
+      
+      #<a href="https://blog.tiagodev.space/tags/"></a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p><img src="/jzmk/prof1024.jpg" alt="PCB"></p>
+<h2 id="the-innards-of-a-keyboard">The innards of a keyboard<a href="#the-innards-of-a-keyboard" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key&rsquo;s numeric code and the fact it was pressed. You release it, another message is sent.</p>
+<p>Nowadays the common way to transfer these messages is through USB.</p>
+<p>Generating USB messages with a custom built circuit is not trivial. The smart way to do it is to use a microcontroller that can natively speak USB. A microcontroller is a chip that contains a CPU, RAM and ROM and input/output devices.</p>
+<p>Most non commercial mechanical keyboards use one of the following microcontrollers:</p>
+<ul>
+<li>Atmega32u4</li>
+<li>Teensy</li>
+<li>Stm32</li>
+</ul>
+<p>The atmega32u4 is the heart of, for example, the Arduino Leonardo and the Arduino pro micro. Being open source, there are really cheap versions of these boards available in the usual chinese websites. The Pro micro was my choice as it is small enough I can fit it under the keyboard PCB.</p>
+<p><img src="/promicro.jpg" alt="Pro Micro"></p>
+<p>This little guy has 2KB of RAM, 1KB of EEPROM. It runs plenty fast for this application.</p>
+<p>That 1KB of EEPROM is significant because it limits the total memory for dynamic macros to about 500 characters across all 12 macro keys. More on this later.</p>
+<h3 id="the-matrix">The matrix<a href="#the-matrix" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>The atmega32u4 has about 20 general purpose IO pins. It isn&rsquo;t easy to find a cheap microcontroller with enough IO pins so that you can connect 1 switch to 1 pin.</p>
+<p>We therefore need a way to connect 100 switchs to only 20 pins. The usual way to solve this problem is quite interesting: we create a matrix of wires with N rows and M columns. All the switches belonging to the same row have one end connected to the same wire.</p>
+<p>The other end of the switches which belong to the same vertical column are also connected together. This creates M vertical wires.</p>
+<p>Here&rsquo;s a nice diagram exemplifying this (taken from a <a href="http://blog.komar.be/how-to-make-a-keyboard-the-matrix/">fantastic blog post</a> ).</p>
+<p><img src="/matrix.png" alt="Matrix"></p>
+<p>For example, the switches for Q and W are in the same row. One end of these switches is connected to the same row wire. The other end is connected each to its own column wire.</p>
+<p>For a matrix with 100 switches we need at least 10 wires for the rows and 10 wires for the columns (using a square matrix). Thus needing only 20pins for 100switches.</p>
+<p>In small keyboards we can connect these M wires directly to the microcontroller, as long as the microcontroller has at least N+M free IO pins. At each switch we also connect a diode that goes from the switch to the sensing wire. We need the diodes to prevent issues when multiple keys are pressed at the same time. I&rsquo;ll skip the why but the blog post above expands a lot on that.</p>
+<p>To detect if a key is pressed we do the following:</p>
+<ul>
+<li>Set all the pins connected to columns as outputs and initialize them to a high value.</li>
+<li>Set all pins connected to rows as input with pull-ups (meaning if nothing is connected to those pins they will be logically high as there are internal resistors the pull them up)</li>
+<li>We set a single column as low.</li>
+<li>We read the status of the pins connected to the rows.</li>
+</ul>
+<p>Remember that a switch essentially connects a row pin to a column pin. If the switch is open (key not pressed) then there is no electrical connection between the two. Whatever value (electrical potential) we have on the column pin will not be seen at the row pin. When the switch is connected, both pins have the same value.</p>
+<p>All the row pins are pre-configured to be in INPUT mode with pull ups so if left unconnected they will always have a HIGH value. When we want to sense if for example the Q key is pressed, then all we need is to keep all columns as HIGH except the column which connects one lead of the Q switch, which we set as LOW. Then we read the state of the row containing the Q switch. If we see a HIGH then we know that key is not pressed, otherwise we see a LOW and the switch has to be closed (key pressed).</p>
+<p>We <em>select</em> only one column at a time by setting it to LOW and then read the state of all switches in that column.</p>
+<p>Do this fast enough for all columns, one at a time, and no human will be able to press a button and have that go undetected.</p>
+<p>You can obviously swap rows and columns. I.e. use column pins for sensing and in fact this is the most common way in other open source keyboards.</p>
+<p>This keyboard has 17 columns and 7 rows. Like I said earlier the rows are used for sensing (input). Also, I couldn&rsquo;t connect directly the 17+7 wires to the microcontroller. The 7 rows are connected directly but the state of the columns is controlled with 3 wires using 3 cascaded shift registers.</p>
+<p>The micro has therefore 7+3 IO pins used.</p>
+<p>Here&rsquo;s a screenshot of the schematic:</p>
+<p><img src="/schematic.png" alt="Schematic"></p>
+<p>Without going too deep on shift registers, they allow the value of the 17 columns to be controlled using only 3 pins on the micro.</p>
+<h3 id="pcb">PCB<a href="#pcb" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>A key design decision of this project was to make it modular. The PCB should not be tied to the microcontroller, i.e. it should be possible to use the same switch matrix with different microcontrollers. For this reason, the PCB contiains male connectors and the micro is connected with wires that run underneath the PCB.</p>
+<p>There are exactly 3 connectors:</p>
+<ul>
+<li>2 pin connector for +vcc and gnd.</li>
+<li>3 pin connector to drive the columns via the shift registers.</li>
+<li>7 pin connector to read the state of the rows.</li>
+</ul>
+<p>One mistake I did here was to put these connectors in opposite corners of the PCB. It seemed sensible at the time given the space available on the PCB but it meant long wires.</p>
+<p>Here&rsquo;s a picture of the rows connector at the top left corner:</p>
+<p>![Rows Connector](/jzmk/rows-connector.jpg**</p>
+<h4 id="pcb-design">PCB design<a href="#pcb-design" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p><strong>Warning</strong>: I&rsquo;m no Electrical engineer! To design the PCB i&rsquo;ve downloaded Kicad, an open source software and then googled. A lot :)</p>
+<p>The first step was to create a schematic, this is fairly simple, you drag a switch component, a diode, then connect them with wires and duplicate this to create first a column, then duplicate the column to get a matrix. Sprinkle with some connectors and you&rsquo;re done with the schematic.</p>
+<p>Next step is to assign <em>footprints</em> to the all the components in the schematic. A footprint defines the physical shape and dimensions of each component. Kicad is brilliant that it already brings footprints for Cherry MX switches (as well as thousands of other components). So the task here was to map each switch to the right footprint. (for example, the <em>shift</em> key being wider has a different footprint than most other keys).</p>
+<p>Here&rsquo;s the footprint mapping dialog in Kicad:</p>
+<p><img src="/jzmk/assign-footprints.png" alt="Assign Footprints"></p>
+<p>Once this is done you jump to the PCB layout. What you see is a pile of footprint switches. The task is to drag the right switch to the right place. Essentially a 200 piece puzzle where every component looks like any other.</p>
+<p>Here&rsquo;s a picture of it midway:</p>
+<p><img src="/pcb1.png" alt="PCB"></p>
+<p>It is extremely important to set the right grid settings and make the components snap to the grid. I can&rsquo;t remember the grid settings used but there are grid dimension that makes everything snap and align perfectly (as the footprints of Cherry MX switches have well defined dimensions).</p>
+<p>At this stage, the electrical traces are not layed out yet, instead, Kicad draws a straight white line between all pairs of points that need a connection. This is called a &ldquo;ratsnest&rdquo; view because, well, it looks messy.</p>
+<p>Kicad has an <em>autoroute</em> functionality that automatically lays down the electrical traces and makes sure they don&rsquo;t touch when they shouldn&rsquo;t. This didn&rsquo;t work well for me and I had to resort to doing it manually. Basically, for every one of those white lines, there will have to be a copper trace that connects them. Unlike the white lines, the copper traces usually cannot cross each other. So to put a trace you usually have to side step and go around every other trace. This becomes progressively harder to do the more traces you put in. In fact, my first attempt was a failure and I had to restart from scratch.</p>
+<p>On the second attempt I&rsquo;ve decided to use two copper layers (top and bottom) and then try to stick to vertical traces at the top and horizontal traces at the bottom.
+On a single layer there are mostly parallel traces so that reduces the points where they have to cross. A via is used to continue one trace from one layer on the other. A via is literaly a whole that is drilled on the PCB and then filled with conductive material.</p>
+<p>Here&rsquo;s a picture of a trace with vias to jump from one layer to the other to work around components already placed.</p>
+<p><img src="/jzmk/planes1.png" alt="PCB"></p>
+<p>The red color are traces in one layer and generally can&rsquo;t cross each other, the green traces in the other layer. A via is used to jump from one layer to the other. As a rule of thumb, right angles and vias should be minimized.</p>
+<p>The traces on this PCB are generally OK except near the 3 shift registers where everything got a bit too messy. Everything still works but messy enough that I missed one of the connections. A mistake I only detected after soldering everything and wondering why the board didn&rsquo;t work&hellip; One of the shift registers didn&rsquo;t have GND connected.</p>
+<h4 id="pcb-production">PCB production<a href="#pcb-production" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>With all the components in the right place and the traces drawn, next step is to do a copper pour for the GND plane. Kicad did most of the work here.</p>
+<p>From there, we need to create Gerber files. Honestly, I followed a guide online to do this and left most settings as default. The gerber files are all the PCB production companies need to build the PCB as they are fed to the robots for drilling etc.</p>
+<p>I&rsquo;ve used JLCPCB for building the PCB. Minimum quantity was 5 PCBs. They were fabricated with Lead-free finish (more expensive but better for the environment) and they end up costing about 50gbp with shipping. A brilliant price actually. Still haven&rsquo;t found a company that can beat these prices and I searched a lot.</p>
+<p>The production process was dead easy from my perspective. Upload the zip file with the gerber files inside, get an immediate quote, pay. One day later an email arrives confirming everything is validated and production will start. A few days later another email confirming the PCBs were delivered to the carrier for shipping.</p>
+<p>Here&rsquo;s a picture of what appeared at the door about 15 days later:</p>
+<p><img src="/jzmk/jlcpcbbox.jpg" alt="JLC Box"></p>
+<p><img src="/jzmk/pcb-2sw.jpg" alt="PCB with 2 switches"></p>
+<p>Awesome!</p>
+<h3 id="soldering">Soldering<a href="#soldering" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Not much to say here. I had sourced the Gateron Brown switches and a bunch of diodes from aliexpres and I suck at soldering. It took me about two hours of non continuous work to solder everything. Used lead free solder which is a bit hard to work with but still I could see I&rsquo;ve gotten progressively better as I went along.</p>
+<p><img src="/jzmk/leads.jpg" alt="Leads"></p>
+<p>Glad it was finished though :) Dreading soldering the remaining 4 PCBs.</p>
+<p>Here&rsquo;s a pic of the soldering job almost finished:</p>
+<p><img src="/jzmk/almost-finished.jpg" alt="Almost Finished soldering"></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+  <div class="pagination__title">
+    <span class="pagination__title-h">Read other posts</span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="https://blog.tiagodev.space/posts/moving-to-hugo/" class="button inline prev">
+        &lt; [<span class="button__text">Moving to Hugo</span>]
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/" class="button inline next">
+         [<span class="button__text">Advent of Code 2016 Day 5 Solution Commented</span>] &gt;
+      </a>
+    
+  </div>
+</div>
+
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

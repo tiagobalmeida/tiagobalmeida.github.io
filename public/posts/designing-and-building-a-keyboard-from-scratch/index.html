@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Designing and Building a Keyboard From Scratch - Part 1 :: blog.tiagodev.space</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="I&rsquo;ve recently finished a side project: A USB keyboard designed and built from scratch, i.e. not using any kit.
+Here it is in all its temporary case glory:
+This post is about the why and how.
+But why? Simple. I wanted a keyboard with the following features:
+Mechanical switches The feel and of these switches is amazing. This is something you’ll have to try for yourself. Go to a computer store, into the gaming section and type on the “Gaming” keyboards. Most of them have so called mechanical switches, with different hardnesses, clicks and tactile feedbacks.
+" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/designing-and-building-a-keyboard-from-scratch/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/terminal.min.e24bf84cafb9e94502324a0c4264d65e9ed1870838db3e47393dfaa83dd5abb4.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Designing and Building a Keyboard From Scratch - Part 1">
+<meta property="og:description" content="I&rsquo;ve recently finished a side project: A USB keyboard designed and built from scratch, i.e. not using any kit.
+Here it is in all its temporary case glory:
+This post is about the why and how.
+But why? Simple. I wanted a keyboard with the following features:
+Mechanical switches The feel and of these switches is amazing. This is something you’ll have to try for yourself. Go to a computer store, into the gaming section and type on the “Gaming” keyboards. Most of them have so called mechanical switches, with different hardnesses, clicks and tactile feedbacks.
+" />
+<meta property="og:url" content="http://localhost:1313/posts/designing-and-building-a-keyboard-from-scratch/" />
+<meta property="og:site_name" content="blog.tiagodev.space" />
+
+  <meta property="og:image" content="http://localhost:1313/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2019-05-01 15:01:31 &#43;0100 BST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    blog.tiagodev.space
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/designing-and-building-a-keyboard-from-scratch/">Designing and Building a Keyboard From Scratch - Part 1</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2019-05-01</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>I&rsquo;ve recently finished a side project: A USB keyboard designed and built from scratch, i.e. not using any kit.</p>
+<p>Here it is in all its temporary case glory:</p>
+<p><img src="/keyb.jpg" alt="Keyboard"></p>
+<p>This post is about the why and how.</p>
+<h1 id="but-why">But why?<a href="#but-why" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p><img src="/butwhy.gif" alt="But why"></p>
+<p>Simple. I wanted a keyboard with the following features:</p>
+<h2 id="mechanical-switches">Mechanical switches<a href="#mechanical-switches" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The feel and of these switches is amazing. This is something you’ll have to try for yourself. Go to a computer store, into the gaming section and type on the “Gaming” keyboards.
+Most of them have so called mechanical switches, with different hardnesses, clicks and tactile feedbacks.</p>
+<p>For this keyboard, I’ve opted for Gateron Browns just because it was easier to source a bag of these than original Cherry MX.
+Browns are not clicky and tactile.</p>
+<p>Here’s a sound difference, mechanical vs &ldquo;typical&rdquo; membrane switches: <a href="https://www.youtube.com/embed/CVtjCbpW7as?start=64">Youtube</a></p>
+<h2 id="dual-layout">Dual Layout<a href="#dual-layout" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>I type in English and Portuguese. Trying to type PT in a British keyboard is a pain. Technically the two layouts have exactly the same number of keys (ISO layout, used in most countries) but the symbols printed on the plastic keycaps are different. If I configure the operating system to think it’s a Portuguese keyboard while using a British one, then i’ll have to type blindly.</p>
+<p><img src="/blindly.jpg" alt="Blindly"></p>
+<p>Above: a British keyboard. Good luck figuring out which of those keys map to the following Portuguese symbols: Ç á à é</p>
+<h2 id="dedicated-keys-for-common-sequences">Dedicated keys for common sequences<a href="#dedicated-keys-for-common-sequences" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Depending what you do on your day job I suspect there’s sequences of characters you type over and over. Here’s a bunch them for me:</p>
+<ul>
+<li>“”</li>
+<li>‘’</li>
+<li>[]</li>
+<li>()</li>
+</ul>
+<p>These symbols are almost always entered in pairs. They’re also typed so frequently they should have their own keys. Some do, some don&rsquo;t. On this keyboard, there are fixed keys for these above the arrows. Pressing any of those immediately enters the two symbols followed by a &ldquo;move left&rdquo; so the cursor goes inside the pair. It works in a good code editor or even in Microsoft Word!</p>
+<p><img src="/specialkeys.jpg" alt="Special keys"></p>
+<p>Yes. I know the top plate looks dodgy at the moment. This is being worked on ;)</p>
+<h2 id="dynamic-macros">Dynamic macros<a href="#dynamic-macros" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Beyond the sequences above, there are also sequences of characters you&rsquo;ll type frequently but that change over time.</p>
+<p>Perhaps it is your company name, or your user name or a password for a test system? Some examples from me:</p>
+<ul>
+<li><code>Password123</code> (Some password for a development system)</li>
+<li><code>function( ) { }</code></li>
+<li><code>new Promise(function(resolve, reject) { })</code></li>
+</ul>
+<p>Code editors have facilities to accelerate these common sequences but they’re dependent on the program you’re typing in. I find it annoying to jump to a different program that doesn&rsquo;t have the same <code>snippets</code> I&rsquo;m used to.</p>
+<p>The idea here is that the keyboard <em>can</em> record sequences and then play them back at the touch of a key.</p>
+<p>On this keyboard this was implemented with an extra row of keys above the F row. Called the Macros row.</p>
+<p>Here&rsquo;s how you record a new sequence:</p>
+<ol>
+<li>Hit the red record key</li>
+<li>Type normally</li>
+<li>Hit the Mx macro. This will assign everything you typed to that key.</li>
+</ol>
+<p>From now on, hitting that Mx key again will replay that sequence. To change it just record again over the same key it. To exit recording mode, press the record button again.</p>
+<p>Some commercial keyboards have this functionality but force the user to install a program to manage these mappings. This is silly in my opinion.</p>
+<h2 id="geek-fun">Geek fun!<a href="#geek-fun" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Had a lot of fun building this and feel both proud and amazed that I can actually type with it :) The feel is amazing to be honest.</p>
+<p>Nevertheless, I won’t lie, this was a tremendous amount of work! Here&rsquo;s the general recipe followed:</p>
+<ul>
+<li>Design a custom circuit using Kicad.</li>
+<li>Turn the circuit into an actual printed circuit board (PCB) with the help of a PCB manufacturing company.</li>
+<li>Order switches, diodes, connectors, cables, etc.</li>
+<li>Solder the 100 switches + 100 diodes. Replace the soldering iron tip midway because it got knackered.</li>
+<li>Design a 3D model for a case and ask a company to print it.</li>
+<li>Use Inkscape to design the custom print on top of the keycaps (remember: dual GB+PT symbols)</li>
+<li>Assemble everything.</li>
+<li>Write code for the Arduino firmware and program it.</li>
+</ul>
+<p>Start to finish it took about 8 months, working on weekends here and there, waiting for parts from China, correcting mistakes along the way&hellip; I&rsquo;d argue it isn&rsquo;t finished yet as I&rsquo;d really like a machined metal case for it as that was the plan from the start :) maybe one day&hellip;</p>
+<p>In part 2 I&rsquo;ll deep dive into the technical details: from designing the circuit, getting it printed, all the way to the software running on the micro.</p>
+<p>Stay tuned if you&rsquo;re curious about it.</p>
+<h1 id="see-also">See also<a href="#see-also" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p><a href="https://deskthority.net/">Deskthority</a></p>
+<p><a href="https://geekhack.org/index.php">Geekhack</a></p>
+<p><a href="https://github.com/BenRoe/awesome-mechanical-keyboard">https://github.com/BenRoe/awesome-mechanical-keyboard</a></p>
+<p><a href="http://blakesmith.me/2019/01/16/making-my-own-usb-keyboard-from-scratch.html">Similar write up</a></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+  <div class="pagination__title">
+    <span class="pagination__title-h">Read other posts</span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="http://localhost:1313/posts/designing-and-building-a-keyboard-from-scratch-part-2/" class="button inline prev">
+        &lt; [<span class="button__text">Designing and Building a Keyboard From Scratch - Part 2</span>]
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="http://localhost:1313/posts/advent-of-code-2016---day-5-solution-commented/" class="button inline next">
+         [<span class="button__text">Advent of Code 2016 Day 5 Solution Commented</span>] &gt;
+      </a>
+    
+  </div>
+</div>
+
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

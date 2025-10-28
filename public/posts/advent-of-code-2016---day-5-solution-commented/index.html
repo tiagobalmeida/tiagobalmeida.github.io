@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Advent of Code 2016 Day 5 Solution Commented :: blog.tiagodev.space</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Advent Of Code 2016 - Day 5 solution commented This is part of a series where I comment my solutions to the advent of code series of programming problems.
+The problem The original problem, with an amusing tale for motivation can be found here. For the purposes of this it is sufficient to know the following:
+You arrive at a password protected door with ID &lsquo;uqwqemis&rsquo;.
+The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID (the puzzle input) and an increasing integer index (starting with 0).
+" />
+<meta name="keywords" content=", " />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/terminal.min.e24bf84cafb9e94502324a0c4264d65e9ed1870838db3e47393dfaa83dd5abb4.css">
+
+  
+  <link rel="stylesheet" href="https://blog.tiagodev.space/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://blog.tiagodev.space/favicon.png">
+<link rel="apple-touch-icon" href="https://blog.tiagodev.space/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Advent of Code 2016 Day 5 Solution Commented">
+<meta property="og:description" content="Advent Of Code 2016 - Day 5 solution commented This is part of a series where I comment my solutions to the advent of code series of programming problems.
+The problem The original problem, with an amusing tale for motivation can be found here. For the purposes of this it is sufficient to know the following:
+You arrive at a password protected door with ID &lsquo;uqwqemis&rsquo;.
+The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID (the puzzle input) and an increasing integer index (starting with 0).
+" />
+<meta property="og:url" content="https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/" />
+<meta property="og:site_name" content="blog.tiagodev.space" />
+
+  
+  
+  <meta property="og:image" content="https://blog.tiagodev.space/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2017-01-17 15:26:47 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    blog.tiagodev.space
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/">Advent of Code 2016 Day 5 Solution Commented</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2017-01-17</time></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://blog.tiagodev.space/tags/"></a>&nbsp;
+      
+      #<a href="https://blog.tiagodev.space/tags/"></a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="advent-of-code-2016---day-5-solution-commented">Advent Of Code 2016 - Day 5 solution commented<a href="#advent-of-code-2016---day-5-solution-commented" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p>This is part of a series where I comment my solutions to the advent of code series of programming problems.</p>
+<h2 id="the-problem">The problem<a href="#the-problem" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The original problem, with an amusing tale for motivation can be found <a href="http://adventofcode.com/2016/day/5">here</a>.
+For the purposes of this it is sufficient to know the following:</p>
+<p>You arrive at a password protected door with ID &lsquo;uqwqemis&rsquo;.</p>
+<p>The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID (the puzzle input) and an increasing integer index (starting with 0).</p>
+<p>A hash indicates the next character in the password if its hexadecimal representation starts with five zeroes. If it does, the sixth character in the hash is the next character of the password.</p>
+<p>For example, if the Door ID is abc:</p>
+<p>The first index which produces a hash that starts with five zeroes is 3231929, which we find by hashing abc3231929; the sixth character of the hash, and thus the first character of the password, is 1.
+5017308 produces the next interesting hash, which starts with 000008f82&hellip;, so the second character of the password is 8.
+The third time a hash starts with five zeroes is for abc5278568, discovering the character f.
+In this example, after continuing this search a total of eight times, the password is 18f47a30.</p>
+<h2 id="my-solution-overview">My solution overview<a href="#my-solution-overview" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The problem can be solved by taking the fixed input ID and successively trying different integers, increasing from 0.</p>
+<p>So, we want to compute</p>
+<ul>
+<li>MD5(door_ID,0)</li>
+<li>MD5(door_ID,1)</li>
+<li>MD5(door_ID,2)</li>
+<li>&hellip;</li>
+</ul>
+<p>For each one we check if it starts with five zeroes. If it does we append the sixth char of the hash into the password.</p>
+<p>The process stops when the password has 8 characters.</p>
+<p>As an additional challenge, i&rsquo;ve decided to try implementing this in Clojure. A lisp-like language that runs on the JVM. It was my first experience with the language.</p>
+<h2 id="commented-solution">Commented solution<a href="#commented-solution" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The whole code for the solution can be found <a href="https://github.com/jumpifzero/adventofcode2016/blob/master/day5/src/app/core.clj">here</a></p>
+<p>The general process is this:</p>
+<p>Start with a lazy list of successive integers from 0.
+For each one, prepend the door ID. This is a good problem for a map, which produces another list.
+From this list of door_ID,Counter we use a map for getting the corresponding items md5 hashes.</p>
+<p>In clojure this is done for instance with:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="p">(</span><span class="nf">map</span> <span class="nv">digest/md5</span> 
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="nf">map</span> <span class="p">(</span><span class="nv">fn</span> <span class="nv">[s]</span> <span class="p">(</span><span class="nv">str</span> <span class="nv">door-id-str</span> <span class="nv">s</span><span class="p">))</span> 
+</span></span><span class="line"><span class="cl">		<span class="p">(</span><span class="nv">range</span><span class="p">)))</span>
+</span></span></code></pre></div><p>Reading inside-out we have (range) that produces a list of integers from 0.
+str is a function that produces a string, essentially concatenating door-id-str with its argument s. This anonymous function (fn) is used on the inner map to produce a list of door_ID,Counter for all values of Counter from 0 to above.</p>
+<p>This is fed into a second map with a library function digest/md5 to get the md5 hashes of those strings.</p>
+<p><strong>Isn&rsquo;t this an infinite list??</strong></p>
+<p>It is! If you tried to print the result of the expression above, it would go on forever as it is using all integers from 0 until infinity. The beauty is that (range) doesn&rsquo;t actually return such a list. Instead, it returns <em>something</em> that knows how to get the next element in the sequence. This is called a lazy sequence in many languages.
+Further down you&rsquo;ll see how the process stops.</p>
+<p>So now, we have a list of hashes. We&rsquo;ll need to process it one item a time and in order.</p>
+<p>For each item, we see if it starts with five zeroes. When it does, we get the sixth char, when it does not, we just skip it. We can stop looking at items in the list when the resulting password is already 8 chars long.</p>
+<p>There are many ways to do this. A simple for loop would work. Instead I went with a reduce, which is a common pattern for taking a sequence and another function f, apply f to successive pairs of elements in the sequence and return a single element. <em>Reduce</em> the sequence into one thing.</p>
+<p>This is done in the following bit of code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="p">(</span><span class="nf">reduce</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nv">fn</span> <span class="nv">[password</span> <span class="nv">token]</span> 
+</span></span><span class="line"><span class="cl">      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">count</span> <span class="nv">password</span><span class="p">)</span> <span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="nv">reduced</span> <span class="nv">password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nv">subs</span> <span class="nv">token</span> <span class="mi">0</span> <span class="mi">5</span><span class="p">)</span> <span class="s">&#34;00000&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">          <span class="p">(</span><span class="nv">str</span> <span class="nv">password</span> <span class="p">(</span><span class="nv">subs</span> <span class="nv">token</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">))</span> 
+</span></span><span class="line"><span class="cl">          <span class="nv">password</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">list_of_md5_hashes</span>
+</span></span></code></pre></div><p>Let&rsquo;s break it down.</p>
+<p>The general pattern we want is <code>(reduce process_item_function initial_password list_of_md5_hashes)</code>.</p>
+<ul>
+<li>initial_password is an empty string (we don&rsquo;t know any password character yet!). This is the &quot;&quot; above.</li>
+<li>list_of_md5_hashes is what we got earlier with the maps.</li>
+<li>process_item_function is a function that will get the password we got so far, and an item from the list (here called token). It needs to do two things:
+<ol>
+<li>See if the password is already 8 chars long. If it is break the outer reduce with it (our overall result): <code>(reduced password)</code></li>
+<li>See if the token starts with five zeroes. When it does, return the password we know with the sixth char of this token appended. <code>(if (= (subs token 0 5) &quot;00000&quot;) ...</code></li>
+</ol>
+</li>
+</ul>
+<h2 id="final-remarks">Final remarks<a href="#final-remarks" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Really like how clojure makes this solution very short and readable. The whole thing is 33 lines with empty lines and comments.</p>
+<h2 id="admin">Admin<a href="#admin" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Last updated at 16/01/2017</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+  <div class="pagination__title">
+    <span class="pagination__title-h">Read other posts</span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/" class="button inline prev">
+        &lt; [<span class="button__text">Designing and Building a Keyboard From Scratch - Part 2</span>]
+      </a>
+    
+    
+    
+  </div>
+</div>
+
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

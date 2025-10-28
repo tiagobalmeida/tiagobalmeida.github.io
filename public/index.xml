@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>blog.tiagodev.space</title>
+    <link>https://blog.tiagodev.space/</link>
+    <description>Recent content on blog.tiagodev.space</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 28 Oct 2025 20:50:47 +0000</lastBuildDate>
+    <atom:link href="https://blog.tiagodev.space/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Moving to Hugo</title>
+      <link>https://blog.tiagodev.space/posts/moving-to-hugo/</link>
+      <pubDate>Tue, 28 Oct 2025 20:50:47 +0000</pubDate>
+      <guid>https://blog.tiagodev.space/posts/moving-to-hugo/</guid>
+      <description>&lt;p&gt;Hope you like the new template! I&amp;rsquo;ve switched from the custom script to Hugo.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Designing and Building a Keyboard From Scratch - Part 2</title>
+      <link>https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/</link>
+      <pubDate>Fri, 28 Jun 2019 15:18:52 +0100</pubDate>
+      <guid>https://blog.tiagodev.space/posts/designing-and-building-a-keyboard-from-scratch-part-2/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://blog.tiagodev.space/jzmk/prof1024.jpg&#34; alt=&#34;PCB&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-innards-of-a-keyboard&#34;&gt;The innards of a keyboard&lt;/h2&gt;&#xA;&lt;p&gt;Conceptually a keyboard is a collection of 100 or so individual switches all connected to a circuit that continuously senses their state and reports any change to the connected computer. You press a key, a message is sent with the key&amp;rsquo;s numeric code and the fact it was pressed. You release it, another message is sent.&lt;/p&gt;&#xA;&lt;p&gt;Nowadays the common way to transfer these messages is through USB.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Advent of Code 2016 Day 5 Solution Commented</title>
+      <link>https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/</link>
+      <pubDate>Tue, 17 Jan 2017 15:26:47 +0100</pubDate>
+      <guid>https://blog.tiagodev.space/posts/advent-of-code-2016---day-5-solution-commented/</guid>
+      <description>&lt;h1 id=&#34;advent-of-code-2016---day-5-solution-commented&#34;&gt;Advent Of Code 2016 - Day 5 solution commented&lt;/h1&gt;&#xA;&lt;p&gt;This is part of a series where I comment my solutions to the advent of code series of programming problems.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;&#xA;&lt;p&gt;The original problem, with an amusing tale for motivation can be found &lt;a href=&#34;http://adventofcode.com/2016/day/5&#34;&gt;here&lt;/a&gt;.&#xA;For the purposes of this it is sufficient to know the following:&lt;/p&gt;&#xA;&lt;p&gt;You arrive at a password protected door with ID &amp;lsquo;uqwqemis&amp;rsquo;.&lt;/p&gt;&#xA;&lt;p&gt;The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID (the puzzle input) and an increasing integer index (starting with 0).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
