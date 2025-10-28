@@ -107,3 +107,7 @@ pagination.pagerSize = 5
           identifier = "showcase"
           name = "Showcase"
           url = "/showcase"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'          
