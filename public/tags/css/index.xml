@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Css on blog.tiagodev.space</title>
+    <link>https://blog.tiagodev.space/tags/css/</link>
+    <description>Recent content in Css on blog.tiagodev.space</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 29 Oct 2016 21:42:03 +0000</lastBuildDate>
+    <atom:link href="https://blog.tiagodev.space/tags/css/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Making a Pure Css Circular Progress Bar</title>
+      <link>https://blog.tiagodev.space/posts/making-a-pure-css-circular-progress-bar/</link>
+      <pubDate>Sat, 29 Oct 2016 21:42:03 +0000</pubDate>
+      <guid>https://blog.tiagodev.space/posts/making-a-pure-css-circular-progress-bar/</guid>
+      <description>&lt;p&gt;This post describes a way to build circular progress bars with only CSS and html. No javascript is executed at the device and no images are loaded. This makes the approach very fast to load and render. I did not invent the technique but the post goes to a great length explaining how this can be done with just css.&lt;/p&gt;&#xA;&lt;p&gt;This is how it looks like:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.tiagodev.space/cssprogbar-sample.png&#34; alt=&#34;sample&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;And the mandatory &lt;a href=&#34;https://blog.tiagodev.space/demo/circ-prog-bar/index.html&#34;&gt;Live demo&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
