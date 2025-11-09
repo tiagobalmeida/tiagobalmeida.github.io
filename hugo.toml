@@ -95,7 +95,7 @@ pagination.pagerSize = 5
       words = "words"
 
       [languages.en.params.logo]
-        logoText = "blog.tiagodev.space"
+        logoText = "jumpifzero's blog"
         logoHomeLink = "/"
 
       [languages.en.menu]
