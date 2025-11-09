@@ -5,7 +5,7 @@ date = "2017-01-17T15:26:47+01:00"
 author = ""
 authorTwitter = "" #do not include @
 cover = ""
-tags = ["", ""]
+tags = ["programming", "clojure"]
 keywords = ["", ""]
 description = ""
 showFullContent = false
@@ -14,8 +14,6 @@ hideComments = false
 +++
 
 # Advent Of Code 2016 - Day 5 solution commented
-
-This is part of a series where I comment my solutions to the advent of code series of programming problems.
 
 ## The problem
 The original problem, with an amusing tale for motivation can be found [here](http://adventofcode.com/2016/day/5). 

@@ -2,6 +2,7 @@
 date = '2019-05-01T15:01:31+01:00'
 draft = true
 title = 'Designing and Building a Keyboard From Scratch - Part 1'
+tags = ["electronics", "keyboards"]
 +++
 
 I've recently finished a side project: A USB keyboard designed and built from scratch, i.e. not using any kit.

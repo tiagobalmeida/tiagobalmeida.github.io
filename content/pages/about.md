@@ -1,0 +1,1 @@
+Hi! I'm Tiago. This is my blog where I write about whatever but mostly computers and programming.
